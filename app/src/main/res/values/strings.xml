@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">PixabayTest</string>
+    <string name="user_name">Default</string>
+    <string name="search_btn_text">Search</string>
+</resources>
