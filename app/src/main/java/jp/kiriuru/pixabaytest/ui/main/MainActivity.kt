@@ -1,4 +1,4 @@
-package jp.kiriuru.myapplication21.ui.main
+package jp.kiriuru.pixabaytest.ui.main
 
 import android.os.Bundle
 import android.util.Log
@@ -7,12 +7,12 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import jp.kiriuru.myapplication21.data.adapter.RvAdapter
-import jp.kiriuru.myapplication21.data.api.ApiHelper
-import jp.kiriuru.myapplication21.data.api.RetrofitBuilder
-import jp.kiriuru.myapplication21.data.entitys.Hits
-import jp.kiriuru.myapplication21.databinding.ActivityMainBinding
-import jp.kiriuru.myapplication21.utils.Status
+import jp.kiriuru.pixabaytest.data.adapter.RvAdapter
+import jp.kiriuru.pixabaytest.data.api.ApiHelper
+import jp.kiriuru.pixabaytest.data.api.RetrofitBuilder
+import jp.kiriuru.pixabaytest.data.entitys.Hits
+import jp.kiriuru.pixabaytest.databinding.ActivityMainBinding
+import jp.kiriuru.pixabaytest.utils.Status
 import kotlinx.android.synthetic.main.activity_main.*
 
 
@@ -22,6 +22,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var mBinding: ActivityMainBinding
     private lateinit var mAdapter: RvAdapter
     private var mList = mutableListOf<Hits>()
+    private var defaultPerImage: Int = 30
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,15 +43,16 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun searchImages(request: String) {
-        mViewModel.searchImage(request).observe(this, {
+        mViewModel.searchImage(request, defaultPerImage).observe(this, {
             it?.let { resources ->
                 when (resources.status) {
                     Status.SUCCESS -> {
                         it.data?.let { it1 ->
-                            mList.clear()
-                            mList.addAll(it1.hits)
+                            //  mList.clear()
+                            //mList.addAll(it1.hits)
+                            update(it1.hits)
                         }
-                        update(mList)
+                        //   update(mList)
                     }
                     Status.ERROR -> {
                         Toast.makeText(this, it.message, Toast.LENGTH_SHORT).show()

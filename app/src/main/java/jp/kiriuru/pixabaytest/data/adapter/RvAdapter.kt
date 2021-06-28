@@ -1,12 +1,12 @@
-package jp.kiriuru.myapplication21.data.adapter
+package jp.kiriuru.pixabaytest.data.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.load.engine.DiskCacheStrategy
-import jp.kiriuru.myapplication21.data.entitys.Hits
-import jp.kiriuru.myapplication21.databinding.ListItemBinding
-import jp.kiriuru.myapplication21.utils.GlideApp
+import jp.kiriuru.pixabaytest.data.entitys.Hits
+import jp.kiriuru.pixabaytest.databinding.ListItemBinding
+import jp.kiriuru.pixabaytest.utils.GlideApp
 
 class RvAdapter(list: MutableList<Hits>) : RecyclerView.Adapter<RvAdapter.ViewHolder>() {
     class ViewHolder(val binding: ListItemBinding) : RecyclerView.ViewHolder(binding.root) {

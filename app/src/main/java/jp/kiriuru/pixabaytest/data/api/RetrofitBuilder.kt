@@ -1,4 +1,4 @@
-package jp.kiriuru.myapplication21.data.api
+package jp.kiriuru.pixabaytest.data.api
 
 import com.github.leonardoxh.livedatacalladapter.LiveDataCallAdapterFactory
 import retrofit2.Retrofit

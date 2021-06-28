@@ -1,9 +1,9 @@
-package jp.kiriuru.myapplication21.ui.main
+package jp.kiriuru.pixabaytest.ui.main
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import jp.kiriuru.myapplication21.data.api.ApiHelper
-import jp.kiriuru.myapplication21.data.repository.Repo
+import jp.kiriuru.pixabaytest.data.api.ApiHelper
+import jp.kiriuru.pixabaytest.data.repository.Repo
 
 class MainViewModelFactory(private val apiHelper: ApiHelper) : ViewModelProvider.Factory {
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
