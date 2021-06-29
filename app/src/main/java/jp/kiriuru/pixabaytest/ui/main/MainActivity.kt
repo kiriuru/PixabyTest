@@ -22,7 +22,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var mBinding: ActivityMainBinding
     private lateinit var mAdapter: RvAdapter
     private var mList = mutableListOf<Hits>()
-    private var defaultPerImage: Int = 30
+    private var defaultPerImage: Int = 3
+    private var defaultSearchReq: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,7 +31,9 @@ class MainActivity : AppCompatActivity() {
         setContentView(mBinding.root)
         setupViewModel()
         initRV()
+        searchImages(mViewModel.request)
         mBinding.btn.setOnClickListener {
+            defaultSearchReq = mBinding.searchField.text.toString()
             searchImages(mBinding.searchField.text.toString())
         }
     }
@@ -38,7 +41,7 @@ class MainActivity : AppCompatActivity() {
     private fun setupViewModel() {
         mViewModel = ViewModelProviders.of(
             this,
-            MainViewModelFactory(ApiHelper(RetrofitBuilder.apiService))
+            MainViewModelFactory(ApiHelper(RetrofitBuilder.apiService), defaultSearchReq)
         ).get(MainViewModel::class.java)
     }
 
@@ -48,11 +51,11 @@ class MainActivity : AppCompatActivity() {
                 when (resources.status) {
                     Status.SUCCESS -> {
                         it.data?.let { it1 ->
-                            //  mList.clear()
-                            //mList.addAll(it1.hits)
-                            update(it1.hits)
+                            mList.clear()
+                            mList.addAll(it1.hits)
+//                            update(it1.hits)
                         }
-                        //   update(mList)
+                        update(mList)
                     }
                     Status.ERROR -> {
                         Toast.makeText(this, it.message, Toast.LENGTH_SHORT).show()
@@ -84,6 +87,7 @@ class MainActivity : AppCompatActivity() {
             notifyDataSetChanged()
         }
     }
+
 
 }
 

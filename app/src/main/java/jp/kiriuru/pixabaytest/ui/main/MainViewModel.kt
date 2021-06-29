@@ -10,12 +10,13 @@ import kotlinx.coroutines.Dispatchers
 const val TAG = "MAIN_VIEW_MODEL"
 
 
-class MainViewModel(private val repo: Repo) : ViewModel() {
+class MainViewModel(private val repo: Repo, var request: String) : ViewModel() {
     fun searchImage(req: String, perPage: Int) = liveData(Dispatchers.IO) {
+        request = req
         Log.d(TAG, "Start")
         emit(Resource.loading(data = null))
         try {
-            emit(Resource.success(data = repo.searchImage(req, perPage)))
+            emit(Resource.success(data = repo.searchImage(request, perPage)))
             Log.d(TAG, "Succses")
         } catch (exception: Exception) {
             emit(Resource.error(data = null, message = exception.message ?: "Error Occurred!"))
