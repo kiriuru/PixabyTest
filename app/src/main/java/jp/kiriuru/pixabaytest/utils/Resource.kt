@@ -1,4 +1,4 @@
-package jp.kiriuru.myapplication21.utils
+package jp.kiriuru.pixabaytest.utils
 
 data class Resource<out T>(val status: Status, val data: T?, val message: String?) {
     companion object {

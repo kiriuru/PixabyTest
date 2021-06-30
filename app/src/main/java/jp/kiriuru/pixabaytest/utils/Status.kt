@@ -1,4 +1,4 @@
-package jp.kiriuru.myapplication21.utils
+package jp.kiriuru.pixabaytest.utils
 
 enum class Status {
     SUCCESS,

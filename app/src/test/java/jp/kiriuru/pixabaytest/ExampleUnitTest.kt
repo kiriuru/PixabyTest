@@ -1,4 +1,4 @@
-package jp.kiriuru.myapplication21
+package jp.kiriuru.pixabaytest
 
 import org.junit.Assert.assertEquals
 import org.junit.Test

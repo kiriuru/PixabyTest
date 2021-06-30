@@ -1,4 +1,4 @@
-package jp.kiriuru.myapplication21.utils
+package jp.kiriuru.pixabaytest.utils
 
 import android.content.Context
 import com.bumptech.glide.GlideBuilder
