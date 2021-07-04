@@ -32,8 +32,16 @@ class RvAdapter : RecyclerView.Adapter<RvAdapter.ViewHolder>() {
         val item = mItems[position]
         holder.binding.username.text = item.user
 
-        imageLoad(holder.itemView.context, item.webformatURL, item.previewURL, holder.binding.img)
-        avatarLoad(holder.itemView.context, item.userImageURL, holder.binding.avatar)
+        imageLoad(
+            holder.itemView.context, 
+            item.webformatURL, 
+            item.previewURL, 
+            holder.binding.img)
+
+        avatarLoad(
+            holder.itemView.context, 
+            item.userImageURL, 
+            holder.binding.avatar)
     }
 
     override fun getItemCount(): Int = mItems.size
