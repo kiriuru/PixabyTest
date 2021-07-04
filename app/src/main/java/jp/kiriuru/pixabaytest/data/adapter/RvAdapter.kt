@@ -1,20 +1,20 @@
 package jp.kiriuru.pixabaytest.data.adapter
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.load.engine.DiskCacheStrategy
-import jp.kiriuru.pixabaytest.data.entitys.Hits
+import jp.kiriuru.pixabaytest.data.model.Hits
 import jp.kiriuru.pixabaytest.databinding.ListItemBinding
 import jp.kiriuru.pixabaytest.utils.GlideApp
 
-class RvAdapter(list: MutableList<Hits>) : RecyclerView.Adapter<RvAdapter.ViewHolder>() {
-    class ViewHolder(val binding: ListItemBinding) : RecyclerView.ViewHolder(binding.root) {
-    }
+class RvAdapter : RecyclerView.Adapter<RvAdapter.ViewHolder>() {
+    class ViewHolder(val binding: ListItemBinding) : RecyclerView.ViewHolder(binding.root)
 
-    var mItems: MutableList<Hits> = list
 
-//    lateinit var itemClick: OnItemClick
+    private val mItems = mutableListOf<Hits>()
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -24,56 +24,56 @@ class RvAdapter(list: MutableList<Hits>) : RecyclerView.Adapter<RvAdapter.ViewHo
                 parent,
                 false
             )
-        ).listen { position, type ->
-            mItems[position].let {
-//                itemClick.onItemClick(it)
-            }
-        }
+        )
     }
-
-//    interface OnItemClick {
-//        fun onItemClick(item: Hits)
-//    }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
 
         val item = mItems[position]
         holder.binding.username.text = item.user
 
-
-
-        GlideApp.with(holder.itemView.context).load(
-            item.webformatURL
-        ).thumbnail(
-            GlideApp.with(holder.itemView.context)
-                .load(item.previewURL)
-        )
-            .diskCacheStrategy(DiskCacheStrategy.ALL)
-            .into(holder.binding.img)
-
-        GlideApp.with(holder.itemView.context).load(
-            item.userImageURL
-        ).diskCacheStrategy(DiskCacheStrategy.ALL)
-            .into(holder.binding.avatar)
-
-
+        imageLoad(holder.itemView.context, item.webformatURL, item.previewURL, holder.binding.img)
+        avatarLoad(holder.itemView.context, item.userImageURL, holder.binding.avatar)
     }
 
     override fun getItemCount(): Int = mItems.size
 
-    private fun <T : RecyclerView.ViewHolder> T.listen(event: (position: Int, type: Int) -> Unit): T {
-        itemView.setOnClickListener {
-            event.invoke(absoluteAdapterPosition, itemViewType)
-        }
-        return this
+    fun addSource(hits: List<Hits>) {
+        mItems.clear()
+        mItems.addAll(hits)
+        notifyDataSetChanged()
     }
 
-    fun addSource(source: List<Hits>) {
-        this.mItems.apply {
-            mItems.clear()
-            addAll(source)
-        }
+
+    private fun imageLoad(
+        viewContext: Context,
+        url: String,
+        previewUrl: String,
+        imageView: ImageView
+    ) {
+        GlideApp.with(viewContext).load(
+            url
+        ).thumbnail(
+            GlideApp.with(viewContext)
+                .load(previewUrl)
+        )
+            .diskCacheStrategy(DiskCacheStrategy.ALL)
+            .into(imageView)
     }
+
+    private fun avatarLoad(
+        viewContext: Context,
+        url: String,
+        imageView: ImageView
+    ) {
+        GlideApp.with(viewContext).load(
+            url
+        ).diskCacheStrategy(DiskCacheStrategy.ALL)
+            .into(imageView)
+
+    }
+
+
 }
 
 

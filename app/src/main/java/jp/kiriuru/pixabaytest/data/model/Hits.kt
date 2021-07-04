@@ -1,4 +1,4 @@
-package jp.kiriuru.pixabaytest.data.entitys
+package jp.kiriuru.pixabaytest.data.model
 
 import com.google.gson.annotations.SerializedName
 
