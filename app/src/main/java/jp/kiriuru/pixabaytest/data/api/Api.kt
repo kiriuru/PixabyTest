@@ -1,6 +1,6 @@
 package jp.kiriuru.pixabaytest.data.api
 
-import jp.kiriuru.pixabaytest.data.entitys.PixabayResponse
+import jp.kiriuru.pixabaytest.data.model.PixabayResponse
 import retrofit2.http.GET
 import retrofit2.http.Query
 
