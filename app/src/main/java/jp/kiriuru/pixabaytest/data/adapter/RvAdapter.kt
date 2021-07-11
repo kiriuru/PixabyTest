@@ -8,9 +8,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import jp.kiriuru.pixabaytest.data.model.Hits
 import jp.kiriuru.pixabaytest.databinding.ListItemBinding
+import jp.kiriuru.pixabaytest.utils.ClickListener
 import jp.kiriuru.pixabaytest.utils.GlideApp
 
-class RvAdapter : RecyclerView.Adapter<RvAdapter.ViewHolder>() {
+class RvAdapter(private val clickListener: ClickListener<Hits>) :
+    RecyclerView.Adapter<RvAdapter.ViewHolder>() {
     class ViewHolder(val binding: ListItemBinding) : RecyclerView.ViewHolder(binding.root)
 
 
@@ -33,15 +35,19 @@ class RvAdapter : RecyclerView.Adapter<RvAdapter.ViewHolder>() {
         holder.binding.username.text = item.user
 
         imageLoad(
-            holder.itemView.context, 
-            item.webformatURL, 
-            item.previewURL, 
-            holder.binding.img)
+            holder.itemView.context,
+            item.webformatURL,
+            item.previewURL,
+            holder.binding.img
+        )
 
         avatarLoad(
-            holder.itemView.context, 
-            item.userImageURL, 
-            holder.binding.avatar)
+            holder.itemView.context,
+            item.userImageURL,
+            holder.binding.avatar
+        )
+
+        holder.binding.img.setOnClickListener { clickListener.setClickListener(item) }
     }
 
     override fun getItemCount(): Int = mItems.size
@@ -78,9 +84,7 @@ class RvAdapter : RecyclerView.Adapter<RvAdapter.ViewHolder>() {
             url
         ).diskCacheStrategy(DiskCacheStrategy.ALL)
             .into(imageView)
-
     }
-
 
 }
 
