@@ -7,7 +7,7 @@
     android:fitsSystemWindows="true"
     android:focusable="true"
     android:focusableInTouchMode="true"
-    tools:context=".ui.MainActivity">
+    tools:context=".ui.main.MainFragment">
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/startGuideLine"

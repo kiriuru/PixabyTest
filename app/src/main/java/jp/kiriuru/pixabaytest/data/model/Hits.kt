@@ -1,8 +1,10 @@
 package jp.kiriuru.pixabaytest.data.model
 
+import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
+import kotlinx.parcelize.Parcelize
 
-
+@Parcelize
 data class Hits(
     @SerializedName("id") val id: Long,
     @SerializedName("pageURL") val pageURL: String,
@@ -28,4 +30,4 @@ data class Hits(
     @SerializedName("user_id") val userId: String,
     @SerializedName("user") val user: String,
     @SerializedName("userImageURL") val userImageURL: String
-)
+) : Parcelable

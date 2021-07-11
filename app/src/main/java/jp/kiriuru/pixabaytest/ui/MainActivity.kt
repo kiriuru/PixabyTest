@@ -2,6 +2,7 @@ package jp.kiriuru.pixabaytest.ui
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
@@ -23,6 +24,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(mBinding.root)
 
         val navView: BottomNavigationView = mBinding.navView
+        mBinding.navView.isVisible = false
 
         val navHostFragment =
             supportFragmentManager.findFragmentById(R.id.nav_host_fragment_activity_main) as NavHostFragment
@@ -30,7 +32,7 @@ class MainActivity : AppCompatActivity() {
 
         val appBarConfig = AppBarConfiguration(
             setOf(
-                R.id.navigation_home, R.id.navigation_notifications, R.id.navigation_dashboard
+                R.id.image_list, R.id.navigation_notifications, R.id.navigation_dashboard
             )
         )
         setupActionBarWithNavController(navController, appBarConfig)
