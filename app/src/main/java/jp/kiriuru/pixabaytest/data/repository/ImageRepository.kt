@@ -1,8 +1,9 @@
 package jp.kiriuru.pixabaytest.data.repository
 
 import jp.kiriuru.pixabaytest.data.api.Api
+import javax.inject.Inject
 
-class ImageRepository(private val apiService: Api) {
+class ImageRepository @Inject constructor(private val apiService: Api) {
 
     suspend fun searchImage(req: String, perPage: Int) = apiService.searchImage(
         request = req,

@@ -9,8 +9,12 @@ import jp.kiriuru.pixabaytest.utils.Resource
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.shareIn
+import javax.inject.Inject
 
-class MainViewModel(private val repository: ImageRepository, var request: String) : ViewModel() {
+class MainViewModel @Inject constructor(
+    private val repository: ImageRepository,
+    var request: String
+) : ViewModel() {
 
     //SharedFlow + Resource
     fun searchImage(req: String, perPage: Int) = flow {

@@ -28,6 +28,7 @@ import jp.kiriuru.pixabaytest.utils.Const.Companion.TAG_MAIN
 import jp.kiriuru.pixabaytest.utils.Status
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 
 class MainFragment : Fragment(), ClickListener<Hits> {
@@ -35,9 +36,9 @@ class MainFragment : Fragment(), ClickListener<Hits> {
     private var defaultPerImage: Int = 30
     private var defaultSearchReq: String = ""
 
-    private val viewModel: MainViewModel by viewModels {
-        MainViewModelFactory(RetrofitBuilder.apiService, defaultSearchReq)
-    }
+    @Inject lateinit var viewModel: MainViewModel
+
+  //  private val viewModel: MainViewModel by viewModels()
 
     private var _binding: FragmentMainBinding? = null
     private val binding get() = checkNotNull(_binding)
