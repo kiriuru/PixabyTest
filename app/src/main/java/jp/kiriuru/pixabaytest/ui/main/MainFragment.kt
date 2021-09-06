@@ -1,5 +1,6 @@
 package jp.kiriuru.pixabaytest.ui.main
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -12,14 +13,15 @@ import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
+import jp.kiriuru.pixabaytest.App
 import jp.kiriuru.pixabaytest.R
 import jp.kiriuru.pixabaytest.data.adapter.RvAdapter
 import jp.kiriuru.pixabaytest.data.adapter.decoration.ImageDecoration
-import jp.kiriuru.pixabaytest.data.api.RetrofitBuilder
 import jp.kiriuru.pixabaytest.data.model.Hits
 import jp.kiriuru.pixabaytest.databinding.FragmentMainBinding
 import jp.kiriuru.pixabaytest.utils.ClickListener
@@ -36,14 +38,22 @@ class MainFragment : Fragment(), ClickListener<Hits> {
     private var defaultPerImage: Int = 30
     private var defaultSearchReq: String = ""
 
-    @Inject lateinit var viewModel: MainViewModel
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
 
-  //  private val viewModel: MainViewModel by viewModels()
+    private val viewModel by viewModels<MainViewModel> { viewModelFactory }
 
     private var _binding: FragmentMainBinding? = null
     private val binding get() = checkNotNull(_binding)
     private lateinit var mAdapter: RvAdapter
 
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+
+        (requireActivity().application as App).appComponent.mainComponent()
+            .create().inject(this)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

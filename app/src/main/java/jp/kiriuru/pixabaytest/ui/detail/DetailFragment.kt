@@ -18,7 +18,7 @@ class DetailFragment : Fragment() {
 
     private var _binding: DetailFragmentBinding? = null
     private val binding get() = checkNotNull(_binding)
-    lateinit var hits: Hits
+    private lateinit var hits: Hits
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

@@ -2,8 +2,6 @@ package jp.kiriuru.pixabaytest.ui.main
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import jp.kiriuru.pixabaytest.data.api.Api
-import jp.kiriuru.pixabaytest.data.repository.ImageRepository
 import javax.inject.Inject
 import javax.inject.Provider
 
@@ -14,12 +12,34 @@ class MainViewModelFactory @Inject constructor(
 ) : ViewModelProvider.Factory {
 
 
+//    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+//        return viewModelFactories.getValue(modelClass as Class<out ViewModel>).get() as T
+//    }
+
+
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return viewModelFactories.getValue(modelClass as Class<out ViewModel>).get() as T
+        var creator: Provider<out ViewModel>? = viewModelFactories[modelClass]
+        if (creator == null) {
+            for ((key, value) in viewModelFactories) {
+                if (modelClass.isAssignableFrom(key)) {
+                    creator = value
+                    break
+                }
+            }
+        }
+        if (creator == null) {
+            throw IllegalArgumentException("Unknown model class: $modelClass")
+        }
+        try {
+            @Suppress("UNCHECKED_CAST")
+            return creator.get() as T
+        } catch (e: Exception) {
+            throw RuntimeException(e)
+        }
     }
 
-    val viewModelClasses get() = viewModelFactories.keys
-
+    //  val viewModelClasses get() = viewModelFactories.keys
+}
 //    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
 //        return if (modelClass.isAssignableFrom(MainViewModel::class.java)) {
 //            MainViewModel(ImageRepository(apiHelper), request) as T
@@ -27,4 +47,3 @@ class MainViewModelFactory @Inject constructor(
 //            throw IllegalArgumentException("ViewModel not found")
 //        }
 //    }
-}

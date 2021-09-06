@@ -12,9 +12,9 @@ import kotlinx.coroutines.flow.shareIn
 import javax.inject.Inject
 
 class MainViewModel @Inject constructor(
-    private val repository: ImageRepository,
-    var request: String
+    private val repository: ImageRepository
 ) : ViewModel() {
+    var request: String = ""
 
     //SharedFlow + Resource
     fun searchImage(req: String, perPage: Int) = flow {
@@ -23,7 +23,7 @@ class MainViewModel @Inject constructor(
         emit(Resource.loading(data = null))
         try {
             Log.d(TAG_VM, "Success")
-            emit(Resource.success(data = repository.searchImage(request, perPage)))
+            emit(Resource.success(data = repository.searchImage(req = request, perPage)))
         } catch (exception: Exception) {
             emit(Resource.error(data = null, message = exception.message ?: "Error Occurred"))
         }
