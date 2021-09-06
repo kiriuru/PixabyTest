@@ -1,5 +1,6 @@
 package jp.kiriuru.pixabaytest.data.adapter
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -52,6 +53,7 @@ class RvAdapter(private val clickListener: ClickListener<Hits>) :
 
     override fun getItemCount(): Int = mItems.size
 
+    @SuppressLint("NotifyDataSetChanged")
     fun addSource(hits: List<Hits>) {
         mItems.clear()
         mItems.addAll(hits)
