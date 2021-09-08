@@ -1,4 +1,4 @@
-package jp.kiriuru.pixabaytest.ui.main
+package jp.kiriuru.pixabaytest.ui.imageList
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
@@ -9,8 +9,12 @@ import jp.kiriuru.pixabaytest.utils.Resource
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.shareIn
+import javax.inject.Inject
 
-class MainViewModel(private val repository: ImageRepository, var request: String) : ViewModel() {
+class ImageListViewModel @Inject constructor(
+    private val repository: ImageRepository
+) : ViewModel() {
+    var request: String = ""
 
     //SharedFlow + Resource
     fun searchImage(req: String, perPage: Int) = flow {
@@ -19,7 +23,7 @@ class MainViewModel(private val repository: ImageRepository, var request: String
         emit(Resource.loading(data = null))
         try {
             Log.d(TAG_VM, "Success")
-            emit(Resource.success(data = repository.searchImage(request, perPage)))
+            emit(Resource.success(data = repository.searchImage(req = request, perPage)))
         } catch (exception: Exception) {
             emit(Resource.error(data = null, message = exception.message ?: "Error Occurred"))
         }

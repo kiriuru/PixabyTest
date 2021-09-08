@@ -1,5 +1,6 @@
-package jp.kiriuru.pixabaytest.ui.main
+package jp.kiriuru.pixabaytest.ui.imageList
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -12,48 +13,60 @@ import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
+import jp.kiriuru.pixabaytest.App
 import jp.kiriuru.pixabaytest.R
-import jp.kiriuru.pixabaytest.data.adapter.RvAdapter
+import jp.kiriuru.pixabaytest.data.adapter.ImageListAdapter
 import jp.kiriuru.pixabaytest.data.adapter.decoration.ImageDecoration
-import jp.kiriuru.pixabaytest.data.api.RetrofitBuilder
 import jp.kiriuru.pixabaytest.data.model.Hits
-import jp.kiriuru.pixabaytest.databinding.FragmentMainBinding
+import jp.kiriuru.pixabaytest.databinding.FragmentListImageBinding
 import jp.kiriuru.pixabaytest.utils.ClickListener
 import jp.kiriuru.pixabaytest.utils.Const.Companion.BUNDLE
 import jp.kiriuru.pixabaytest.utils.Const.Companion.TAG_MAIN
 import jp.kiriuru.pixabaytest.utils.Status
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 
-class MainFragment : Fragment(), ClickListener<Hits> {
+class ImageListFragment : Fragment(), ClickListener<Hits> {
 
     private var defaultPerImage: Int = 30
     private var defaultSearchReq: String = ""
 
-    private val viewModel: MainViewModel by viewModels {
-        MainViewModelFactory(RetrofitBuilder.apiService, defaultSearchReq)
-    }
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
 
-    private var _binding: FragmentMainBinding? = null
+    private val viewModel by viewModels<ImageListViewModel> { viewModelFactory }
+
+    private var _binding: FragmentListImageBinding? = null
     private val binding get() = checkNotNull(_binding)
-    private lateinit var mAdapter: RvAdapter
 
+    private lateinit var mAdapter: ImageListAdapter
+
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+
+        (requireActivity().application as App).appComponent.imageListComponent()
+            .create().inject(this)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentMainBinding.inflate(layoutInflater)
+        _binding = FragmentListImageBinding.inflate(layoutInflater)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
 
         initRV()
 
@@ -101,7 +114,7 @@ class MainFragment : Fragment(), ClickListener<Hits> {
     }
 
     private fun initRV() {
-        mAdapter = RvAdapter(this)
+        mAdapter = ImageListAdapter(this)
 
         with(binding.recycleView) {
             layoutManager = GridLayoutManager(context, 2)

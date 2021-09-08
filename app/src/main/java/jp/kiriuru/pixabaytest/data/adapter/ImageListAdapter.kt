@@ -1,5 +1,6 @@
 package jp.kiriuru.pixabaytest.data.adapter
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -11,8 +12,9 @@ import jp.kiriuru.pixabaytest.databinding.ListItemBinding
 import jp.kiriuru.pixabaytest.utils.ClickListener
 import jp.kiriuru.pixabaytest.utils.GlideApp
 
-class RvAdapter(private val clickListener: ClickListener<Hits>) :
-    RecyclerView.Adapter<RvAdapter.ViewHolder>() {
+class ImageListAdapter(private val clickListener: ClickListener<Hits>) :
+    RecyclerView.Adapter<ImageListAdapter.ViewHolder>() {
+
     class ViewHolder(val binding: ListItemBinding) : RecyclerView.ViewHolder(binding.root)
 
 
@@ -52,6 +54,7 @@ class RvAdapter(private val clickListener: ClickListener<Hits>) :
 
     override fun getItemCount(): Int = mItems.size
 
+    @SuppressLint("NotifyDataSetChanged")
     fun addSource(hits: List<Hits>) {
         mItems.clear()
         mItems.addAll(hits)
