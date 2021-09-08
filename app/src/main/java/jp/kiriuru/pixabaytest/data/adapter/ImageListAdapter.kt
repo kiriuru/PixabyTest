@@ -12,8 +12,9 @@ import jp.kiriuru.pixabaytest.databinding.ListItemBinding
 import jp.kiriuru.pixabaytest.utils.ClickListener
 import jp.kiriuru.pixabaytest.utils.GlideApp
 
-class RvAdapter(private val clickListener: ClickListener<Hits>) :
-    RecyclerView.Adapter<RvAdapter.ViewHolder>() {
+class ImageListAdapter(private val clickListener: ClickListener<Hits>) :
+    RecyclerView.Adapter<ImageListAdapter.ViewHolder>() {
+
     class ViewHolder(val binding: ListItemBinding) : RecyclerView.ViewHolder(binding.root)
 
 

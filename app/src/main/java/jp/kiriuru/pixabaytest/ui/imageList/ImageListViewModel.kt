@@ -1,4 +1,4 @@
-package jp.kiriuru.pixabaytest.ui.main
+package jp.kiriuru.pixabaytest.ui.imageList
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.shareIn
 import javax.inject.Inject
 
-class MainViewModel @Inject constructor(
+class ImageListViewModel @Inject constructor(
     private val repository: ImageRepository
 ) : ViewModel() {
     var request: String = ""

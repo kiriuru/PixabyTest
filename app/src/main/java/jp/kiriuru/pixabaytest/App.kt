@@ -6,6 +6,7 @@ import jp.kiriuru.pixabaytest.di.DaggerAppComponent
 
 open class App : Application() {
 
+    //Example from https://github.com/android/architecture-samples/tree/dev-dagger
     val appComponent: AppComponent by lazy {
         initializeComponent()
     }
@@ -15,17 +16,3 @@ open class App : Application() {
 
     }
 }
-//
-//    lateinit var appComponent: AppComponent
-//        private set
-
-//    override fun onCreate() {
-//        super.onCreate()
-//        appComponent = DaggerAppComponent.factory().create(applicationContext)
-//    }
-//}
-//val Context.appComponent: AppComponent
-//    get() = when (this) {
-//        is App -> appComponent
-//        else -> applicationContext.appComponent
-//    }

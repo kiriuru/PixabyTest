@@ -1,21 +1,16 @@
-package jp.kiriuru.pixabaytest.ui.main
+package jp.kiriuru.pixabaytest.ui.imageList
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import javax.inject.Inject
 import javax.inject.Provider
 
+//Example from https://github.com/android/architecture-samples/tree/dev-dagger
 @Suppress("UNCHECKED_CAST")
 class MainViewModelFactory @Inject constructor(
     private val viewModelFactories: Map<Class<out ViewModel>,
             @JvmSuppressWildcards Provider<ViewModel>>,
 ) : ViewModelProvider.Factory {
-
-
-//    override fun <T : ViewModel> create(modelClass: Class<T>): T {
-//        return viewModelFactories.getValue(modelClass as Class<out ViewModel>).get() as T
-//    }
-
 
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         var creator: Provider<out ViewModel>? = viewModelFactories[modelClass]
@@ -37,13 +32,4 @@ class MainViewModelFactory @Inject constructor(
             throw RuntimeException(e)
         }
     }
-
-    //  val viewModelClasses get() = viewModelFactories.keys
 }
-//    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-//        return if (modelClass.isAssignableFrom(MainViewModel::class.java)) {
-//            MainViewModel(ImageRepository(apiHelper), request) as T
-//        } else {
-//            throw IllegalArgumentException("ViewModel not found")
-//        }
-//    }
