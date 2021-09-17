@@ -2,11 +2,9 @@ package jp.kiriuru.pixabaytest.ui.imageList
 
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.core.widget.doAfterTextChanged
@@ -26,8 +24,6 @@ import jp.kiriuru.pixabaytest.data.model.Hits
 import jp.kiriuru.pixabaytest.databinding.FragmentListImageBinding
 import jp.kiriuru.pixabaytest.utils.ClickListener
 import jp.kiriuru.pixabaytest.utils.Const.Companion.BUNDLE
-import jp.kiriuru.pixabaytest.utils.Const.Companion.TAG_MAIN
-import jp.kiriuru.pixabaytest.utils.Status
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -36,7 +32,6 @@ import javax.inject.Inject
 class ImageListFragment : Fragment(), ClickListener<Hits> {
 
     private var defaultPerImage: Int = 30
-    private var defaultSearchReq: String = ""
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -67,51 +62,33 @@ class ImageListFragment : Fragment(), ClickListener<Hits> {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-
         initRV()
 
-        searchImage(viewModel.request)
         binding.btn.isVisible = false
         binding.searchField.doAfterTextChanged {
             if (it != null) {
                 if (it.isNotEmpty()) {
                     //       binding.btn.isVisible = true
-                    searchImage(it.toString())
+                    viewModel.setData(it.toString(), perPage = defaultPerImage)
                 } else binding.btn.isVisible = false
             }
         }
 
-        binding.btn.setOnClickListener {
-            defaultSearchReq = binding.searchField.text.toString()
-            searchImage(binding.searchField.text.toString())
-        }
+//        binding.btn.setOnClickListener {
+//            defaultSearchReq = binding.searchField.text.toString()
+//            searchImage(binding.searchField.text.toString())
 
-    }
-
-    //Coroutine+alpha lifecycle
-    private fun searchImage(req: String) {
         lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.searchImage(req, defaultPerImage).collect {
-                    it.let { resource ->
-                        when (resource.status) {
-                            Status.LOADING -> {
-                            }
-                            Status.ERROR -> {
-                                Toast.makeText(context, it.message, Toast.LENGTH_SHORT).show()
-                                Log.d(TAG_MAIN, "${it.message}")
-                            }
-                            Status.SUCCESS -> {
-                                it.data?.let { items ->
-                                    update(items.hits)
-                                }
-                            }
-                        }
+                viewModel.data.collect {
+                    if (it != null) {
+                        update(it.hits)
                     }
                 }
             }
         }
     }
+
 
     private fun initRV() {
         mAdapter = ImageListAdapter(this)
@@ -142,4 +119,29 @@ class ImageListFragment : Fragment(), ClickListener<Hits> {
         )
     }
 
+
+    //Coroutine+alpha lifecycle
+//    private fun searchImage(req: String) {
+//        lifecycleScope.launch {
+//            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+//                viewModel.searchImage(req, defaultPerImage).collect {
+//                    it.let { resource ->
+//                        when (resource.status) {
+//                            Status.LOADING -> {
+//                            }
+//                            Status.ERROR -> {
+//                                Toast.makeText(context, it.message, Toast.LENGTH_SHORT).show()
+//                                Log.d(TAG_MAIN, "${it.message}")
+//                            }
+//                            Status.SUCCESS -> {
+//                                it.data?.let { items ->
+//                                    update(items.hits)
+//                                }
+//                            }
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//    }
 }
