@@ -10,11 +10,9 @@ import androidx.core.view.isVisible
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
+import androidx.lifecycle.*
 import androidx.navigation.fragment.findNavController
+import androidx.paging.LoadState
 import androidx.recyclerview.widget.GridLayoutManager
 import jp.kiriuru.pixabaytest.App
 import jp.kiriuru.pixabaytest.R
@@ -24,11 +22,15 @@ import jp.kiriuru.pixabaytest.data.model.Hits
 import jp.kiriuru.pixabaytest.databinding.FragmentListImageBinding
 import jp.kiriuru.pixabaytest.utils.ClickListener
 import jp.kiriuru.pixabaytest.utils.Const.Companion.BUNDLE
-import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 
+@FlowPreview
 class ImageListFragment : Fragment(), ClickListener<Hits> {
 
     private var defaultPerImage: Int = 30
@@ -41,15 +43,24 @@ class ImageListFragment : Fragment(), ClickListener<Hits> {
     private var _binding: FragmentListImageBinding? = null
     private val binding get() = checkNotNull(_binding)
 
-    private lateinit var mAdapter: ImageListAdapter
+    private val adapter by lazy(LazyThreadSafetyMode.NONE) {
+        ImageListAdapter(this)
 
+    }
 
     override fun onAttach(context: Context) {
-        super.onAttach(context)
-
         (requireActivity().application as App).appComponent.imageListComponent()
             .create().inject(this)
+        super.onAttach(context)
+
+
     }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+    }
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -62,48 +73,83 @@ class ImageListFragment : Fragment(), ClickListener<Hits> {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+
+        binding.recycleView.adapter = adapter
+
         initRV()
 
-        binding.btn.isVisible = false
-        binding.searchField.doAfterTextChanged {
-            if (it != null) {
-                if (it.isNotEmpty()) {
-                    //       binding.btn.isVisible = true
-                    viewModel.setData(it.toString(), perPage = defaultPerImage)
-                } else binding.btn.isVisible = false
-            }
-        }
+//        adapter.addLoadStateListener { state ->
+//            with(binding) {
+//                recycleView.adapter = adapter
+//                recycleView.isVisible = state.refresh != LoadState.Loading
+//                progress.isVisible = state.refresh == LoadState.Loading
+//            }
+//        }
 
-//        binding.btn.setOnClickListener {
-//            defaultSearchReq = binding.searchField.text.toString()
-//            searchImage(binding.searchField.text.toString())
 
         lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.data.collect {
-                    if (it != null) {
-                        update(it.hits)
-                    }
+                viewModel.image.collectLatest {
+                    adapter.submitData(it)
                 }
+            }
+        }
+
+        viewModel.query
+            .flowWithLifecycle(lifecycle, Lifecycle.State.CREATED)
+            .onEach { updateSearchQuery(it) }
+            .launchIn(lifecycleScope)
+
+        lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                binding.searchField.doAfterTextChanged { text ->
+                    viewModel.setQuery(text.toString())
+                }
+            }
+        }
+//
+//        binding.btn.isVisible = false
+//        binding.searchField.doAfterTextChanged {
+//            if (it != null) {
+//                if (it.isNotEmpty()) {
+//                    //       binding.btn.isVisible = true
+//                    viewModel.setData(it.toString(), perPage = defaultPerImage)
+//                } else binding.btn.isVisible = false
+//            }
+//        }
+//
+        binding.btn.setOnClickListener {
+            viewModel.newPager(binding.searchField.text.toString())
+        }
+//
+//        lifecycleScope.launch {
+//            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+//                viewModel.data.collect {
+//                    if (it != null) {
+//                        update(it.hits)
+//                    }
+//                }
+//            }
+//        }
+    }
+
+    private fun updateSearchQuery(searchQuery: String) {
+        with(binding.searchField) {
+            if ((text?.toString() ?: "") != searchQuery) {
+                setText(searchQuery)
             }
         }
     }
 
-
     private fun initRV() {
-        mAdapter = ImageListAdapter(this)
+
 
         with(binding.recycleView) {
             layoutManager = GridLayoutManager(context, 2)
 //            layoutManager = LinearLayoutManager(this@MainActivity)
-            adapter = mAdapter
 
             addItemDecoration(ImageDecoration(R.layout.list_item, 100, 0))
         }
-    }
-
-    private fun update(hits: List<Hits>) {
-        mAdapter.addSource(hits = hits)
     }
 
     override fun onDestroy() {
@@ -112,7 +158,7 @@ class ImageListFragment : Fragment(), ClickListener<Hits> {
     }
 
 
-    override fun setClickListener(data: Hits) {
+    override fun setClickListener(data: Hits?) {
         findNavController().navigate(
             R.id.action_image_list_to_image_detail,
             bundleOf(BUNDLE to data)
