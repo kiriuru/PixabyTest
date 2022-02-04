@@ -11,7 +11,7 @@ import jp.kiriuru.pixabaytest.ui.imageList.ImageListComponent
 //Example from https://github.com/android/architecture-samples/tree/dev-dagger
 @Component(
     modules = [
-//        AppModuleBinds::class,
+        AppModuleBinds::class,
         ViewModelBuilderModule::class,
         NetworkModule::class,
         SubcomponentModule::class
@@ -27,6 +27,7 @@ interface AppComponent {
     fun imageListComponent(): ImageListComponent.Factory
 
     val imageRepository: ImageRepository
+//    val queryImageUseCase:QueryImageUseCase
 }
 
 @Module(subcomponents = [ImageListComponent::class])

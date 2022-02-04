@@ -14,10 +14,10 @@ interface Api {
         @Query("q") q: String,
         @Query("page") @IntRange(from = 1) page: Int = 1,
         @Query("per_page") @IntRange(
-            from = 1,
+            from = 2,
             to = MAX_PAGE_SIZE.toLong()
         ) perPage: Int = DEFAULT_PAGE_SIZE
-    ): PixabayResponse
+    ): Response<PixabayResponse>
 
     companion object {
 

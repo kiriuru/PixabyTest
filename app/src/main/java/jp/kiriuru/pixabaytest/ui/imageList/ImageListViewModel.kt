@@ -1,43 +1,57 @@
 package jp.kiriuru.pixabaytest.ui.imageList
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.paging.Pager
-import androidx.paging.PagingConfig
-import androidx.paging.PagingData
-import androidx.paging.PagingSource
+import androidx.paging.*
+import jp.kiriuru.pixabaytest.data.api.ImagePagingSource
 import jp.kiriuru.pixabaytest.data.model.Hits
+import jp.kiriuru.pixabaytest.data.repository.ImageRepository
+import jp.kiriuru.pixabaytest.data.repository.ImageRepositoryImpl
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.*
 import javax.inject.Inject
-import javax.inject.Provider
 
 class ImageListViewModel @Inject constructor(
-    private val queryImageUseCase: Provider<QueryImageUseCase>
+    private val repository: ImageRepository
 ) : ViewModel() {
+
+    companion object {
+        const val TAG = "ViewModel"
+    }
 
     private val _query = MutableStateFlow("")
     val query: StateFlow<String> = _query.asStateFlow()
 
     private var newPagingSource: PagingSource<*, *>? = null
 
+
+//    val flow = Pager(PagingConfig(pageSize = 5)) {
+//        repository.searchImage(query = _query.value)
+//    }.flow.cachedIn(viewModelScope)
+
     @FlowPreview
-    val image: StateFlow<PagingData<Hits>> = query
+    val image: StateFlow<PagingData<Hits>> = _query
         .map(::newPager)
         .flatMapConcat { pager -> pager.flow }
         .stateIn(viewModelScope, SharingStarted.Lazily, PagingData.empty())
 
 
-    fun newPager(query: String): Pager<Int, Hits> {
+    private fun newPager(query: String): Pager<Int, Hits> {
+        Log.d(TAG, " New Pager $query")
         return Pager(PagingConfig(5, enablePlaceholders = false)) {
-            val queryImageCase = queryImageUseCase.get()
-            queryImageCase(query).also { newPagingSource = it }
+            val queryImageCase = repository.searchImage(query)
+            Log.d(TAG, "repo paging data $queryImageCase ")
+            queryImageCase.also { newPagingSource = it }
+
+
         }
 
     }
 
     fun setQuery(query: String) {
         _query.tryEmit(query)
+        Log.d(TAG, " viewModel _query = ${_query.value} and Query $query")
     }
 }
 

@@ -2,9 +2,11 @@ package jp.kiriuru.pixabaytest.ui.imageList
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.core.widget.doAfterTextChanged
@@ -23,6 +25,7 @@ import jp.kiriuru.pixabaytest.databinding.FragmentListImageBinding
 import jp.kiriuru.pixabaytest.utils.ClickListener
 import jp.kiriuru.pixabaytest.utils.Const.Companion.BUNDLE
 import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -43,10 +46,12 @@ class ImageListFragment : Fragment(), ClickListener<Hits> {
     private var _binding: FragmentListImageBinding? = null
     private val binding get() = checkNotNull(_binding)
 
-    private val adapter by lazy(LazyThreadSafetyMode.NONE) {
-        ImageListAdapter(this)
-
-    }
+    private lateinit var adapter: ImageListAdapter
+//
+//    private val adapter by lazy(LazyThreadSafetyMode.NONE) {
+//        ImageListAdapter(this)
+//
+//    }
 
     override fun onAttach(context: Context) {
         (requireActivity().application as App).appComponent.imageListComponent()
@@ -74,7 +79,7 @@ class ImageListFragment : Fragment(), ClickListener<Hits> {
         super.onViewCreated(view, savedInstanceState)
 
 
-        binding.recycleView.adapter = adapter
+//        binding.recycleView.adapter = adapter
 
         initRV()
 
@@ -89,21 +94,30 @@ class ImageListFragment : Fragment(), ClickListener<Hits> {
 
         lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+
                 viewModel.image.collectLatest {
+
                     adapter.submitData(it)
+                    Log.d(TAG, " image data = ${it.toString()}")
                 }
             }
         }
+//        lifecycleScope.launch {
+//            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+//                viewModel.query.collect {
+//                    updateSearchQuery(it)
+//                    Log.d(TAG, "viewModel.query = ${it}")
+//                }
+//            }
+//        }
 
-        viewModel.query
-            .flowWithLifecycle(lifecycle, Lifecycle.State.CREATED)
-            .onEach { updateSearchQuery(it) }
-            .launchIn(lifecycleScope)
+
 
         lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 binding.searchField.doAfterTextChanged { text ->
                     viewModel.setQuery(text.toString())
+                    Log.d(TAG, " viewModel.setQuery = $text")
                 }
             }
         }
@@ -119,7 +133,8 @@ class ImageListFragment : Fragment(), ClickListener<Hits> {
 //        }
 //
         binding.btn.setOnClickListener {
-            viewModel.newPager(binding.searchField.text.toString())
+            Toast.makeText(requireContext(), adapter.getItemId(2).toString(), Toast.LENGTH_LONG)
+                .show()
         }
 //
 //        lifecycleScope.launch {
@@ -134,8 +149,10 @@ class ImageListFragment : Fragment(), ClickListener<Hits> {
     }
 
     private fun updateSearchQuery(searchQuery: String) {
+        Log.d(TAG, " updater searchQuery = $searchQuery")
         with(binding.searchField) {
             if ((text?.toString() ?: "") != searchQuery) {
+                Log.d(TAG, "Update query $text")
                 setText(searchQuery)
             }
         }
@@ -143,12 +160,13 @@ class ImageListFragment : Fragment(), ClickListener<Hits> {
 
     private fun initRV() {
 
+        adapter = ImageListAdapter(this)
 
-        with(binding.recycleView) {
-            layoutManager = GridLayoutManager(context, 2)
+        with(binding) {
+            recycleView.layoutManager = GridLayoutManager(context, 2)
 //            layoutManager = LinearLayoutManager(this@MainActivity)
-
-            addItemDecoration(ImageDecoration(R.layout.list_item, 100, 0))
+            recycleView.adapter = adapter
+            recycleView.addItemDecoration(ImageDecoration(R.layout.list_item, 100, 0))
         }
     }
 
@@ -163,6 +181,10 @@ class ImageListFragment : Fragment(), ClickListener<Hits> {
             R.id.action_image_list_to_image_detail,
             bundleOf(BUNDLE to data)
         )
+    }
+
+    companion object {
+        const val TAG = "Fragment"
     }
 
 
