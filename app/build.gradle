@@ -64,7 +64,7 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.0"
     implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.4.0'
 
-
+    implementation 'com.github.kirich1409:viewbindingpropertydelegate-noreflection:1.4.6'
 
     //Retrofit
     implementation "com.squareup.retrofit2:retrofit:2.9.0"
@@ -85,7 +85,7 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.2"
     implementation 'com.google.code.gson:gson:2.8.6'
 
-    //Navigator
+    //Navigation
     implementation 'androidx.navigation:navigation-fragment-ktx:2.3.5'
     implementation 'androidx.navigation:navigation-ui-ktx:2.3.5'
 
@@ -93,7 +93,7 @@ dependencies {
     implementation "com.google.dagger:dagger:2.37"
     kapt "com.google.dagger:dagger-compiler:2.37"
 
-    //
-    implementation "androidx.paging:paging-runtime-ktx:3.0.0"
+    //Paging 3
+    implementation "androidx.paging:paging-runtime-ktx:3.1.0"
 
 }

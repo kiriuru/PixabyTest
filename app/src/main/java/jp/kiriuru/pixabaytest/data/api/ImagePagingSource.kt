@@ -37,22 +37,23 @@ class ImagePagingSource @AssistedInject constructor(
                         "\n page $page " +
                         "\n page Size $pageSize"
             )
-
-
-            val hits = response.body()!!.hits
-            val nextPage = if (hits.isEmpty()) null else page + 1
-            val prevPage = if (page > 1) page - 1 else null
-            Log.d(
-                TAG, "hits ${hits[1]}" +
-                        "\n next page $nextPage" +
-                        "\n prev page $prevPage"
-            )
-            return LoadResult.Page(
-                hits,
-                prevKey = prevPage,
-                nextKey = nextPage
-            )
-
+            if (response.isSuccessful){
+                val hits = response.body()!!.hits
+                val nextPage = if (hits.isEmpty()) null else page + 1
+                val prevPage = if (page > 1) page - 1 else null
+                Log.d(
+                    TAG, "hits ${hits[1]}" +
+                            "\n next page $nextPage" +
+                            "\n prev page $prevPage"
+                )
+                return LoadResult.Page(
+                    hits,
+                    prevKey = prevPage,
+                    nextKey = nextPage
+                )
+            } else{
+                return  LoadResult.Error(HttpException(response))
+            }
         } catch (e: HttpException) {
             return LoadResult.Error(e)
         } catch (e: Exception) {

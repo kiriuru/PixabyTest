@@ -31,6 +31,7 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import javax.inject.Provider
 
 
 @FlowPreview
@@ -39,9 +40,9 @@ class ImageListFragment : Fragment(), ClickListener<Hits> {
     private var defaultPerImage: Int = 30
 
     @Inject
-    lateinit var viewModelFactory: ViewModelProvider.Factory
+    lateinit var viewModelFactory: Provider<ImageListViewModel.Factory>
 
-    private val viewModel by viewModels<ImageListViewModel> { viewModelFactory }
+    private val viewModel by viewModels<ImageListViewModel> { viewModelFactory.get() }
 
     private var _binding: FragmentListImageBinding? = null
     private val binding get() = checkNotNull(_binding)
@@ -58,13 +59,14 @@ class ImageListFragment : Fragment(), ClickListener<Hits> {
             .create().inject(this)
         super.onAttach(context)
 
-
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+
     }
+
 
 
     override fun onCreateView(
@@ -79,21 +81,10 @@ class ImageListFragment : Fragment(), ClickListener<Hits> {
         super.onViewCreated(view, savedInstanceState)
 
 
-//        binding.recycleView.adapter = adapter
-
         initRV()
 
-//        adapter.addLoadStateListener { state ->
-//            with(binding) {
-//                recycleView.adapter = adapter
-//                recycleView.isVisible = state.refresh != LoadState.Loading
-//                progress.isVisible = state.refresh == LoadState.Loading
-//            }
-//        }
-
-
         lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
 
                 viewModel.image.collectLatest {
 
@@ -102,50 +93,28 @@ class ImageListFragment : Fragment(), ClickListener<Hits> {
                 }
             }
         }
-//        lifecycleScope.launch {
-//            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-//                viewModel.query.collect {
-//                    updateSearchQuery(it)
-//                    Log.d(TAG, "viewModel.query = ${it}")
-//                }
-//            }
-//        }
 
+        viewModel.query
+            .flowWithLifecycle(lifecycle, Lifecycle.State.CREATED)
+            .onEach { updateSearchQuery(it) }
+            .launchIn(lifecycleScope)
 
-
-        lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                binding.searchField.doAfterTextChanged { text ->
-                    viewModel.setQuery(text.toString())
-                    Log.d(TAG, " viewModel.setQuery = $text")
-                }
-            }
+        binding.searchField.doAfterTextChanged { text ->
+            viewModel.setQuery(text.toString())
+            Log.d(TAG, " viewModel.setQuery = $text")
         }
-//
-//        binding.btn.isVisible = false
-//        binding.searchField.doAfterTextChanged {
-//            if (it != null) {
-//                if (it.isNotEmpty()) {
-//                    //       binding.btn.isVisible = true
-//                    viewModel.setData(it.toString(), perPage = defaultPerImage)
-//                } else binding.btn.isVisible = false
-//            }
-//        }
-//
+
+
+
         binding.btn.setOnClickListener {
-            Toast.makeText(requireContext(), adapter.getItemId(2).toString(), Toast.LENGTH_LONG)
-                .show()
+            binding.searchField.doAfterTextChanged {text ->
+                viewModel.setQuery(text.toString())
+
+                Toast.makeText(requireContext(), "$text", Toast.LENGTH_LONG)
+                    .show()
+            }
+
         }
-//
-//        lifecycleScope.launch {
-//            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-//                viewModel.data.collect {
-//                    if (it != null) {
-//                        update(it.hits)
-//                    }
-//                }
-//            }
-//        }
     }
 
     private fun updateSearchQuery(searchQuery: String) {
@@ -187,29 +156,4 @@ class ImageListFragment : Fragment(), ClickListener<Hits> {
         const val TAG = "Fragment"
     }
 
-
-    //Coroutine+alpha lifecycle
-//    private fun searchImage(req: String) {
-//        lifecycleScope.launch {
-//            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-//                viewModel.searchImage(req, defaultPerImage).collect {
-//                    it.let { resource ->
-//                        when (resource.status) {
-//                            Status.LOADING -> {
-//                            }
-//                            Status.ERROR -> {
-//                                Toast.makeText(context, it.message, Toast.LENGTH_SHORT).show()
-//                                Log.d(TAG_MAIN, "${it.message}")
-//                            }
-//                            Status.SUCCESS -> {
-//                                it.data?.let { items ->
-//                                    update(items.hits)
-//                                }
-//                            }
-//                        }
-//                    }
-//                }
-//            }
-//        }
-//    }
 }
