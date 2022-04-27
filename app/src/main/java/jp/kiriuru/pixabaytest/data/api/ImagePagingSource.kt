@@ -7,7 +7,6 @@ import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import jp.kiriuru.pixabaytest.data.model.Hits
-import jp.kiriuru.pixabaytest.data.model.toHits
 import retrofit2.HttpException
 
 
@@ -24,7 +23,7 @@ class ImagePagingSource @AssistedInject constructor(
     }
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Hits> {
-        Log.d(TAG, " load paging data")
+        Log.d(TAG, " load paging data 1, $query")
 //        if (query.isBlank()) {
 //            return LoadResult.Page(emptyList(), prevKey = null, nextKey = null)
 //        }
@@ -33,11 +32,11 @@ class ImagePagingSource @AssistedInject constructor(
             val pageSize: Int = params.loadSize.coerceAtMost(Api.MAX_PAGE_SIZE)
             val response = apiService.searchImage(q = query, page = page, perPage = pageSize)
             Log.d(
-            TAG, "query $query load data ${response.body()!!.hits[1]} " +
+                TAG, "query $query load data ${response.body()!!.hits[1]} " +
                         "\n page $page " +
                         "\n page Size $pageSize"
             )
-            if (response.isSuccessful){
+            if (response.isSuccessful) {
                 val hits = response.body()!!.hits
                 val nextPage = if (hits.isEmpty()) null else page + 1
                 val prevPage = if (page > 1) page - 1 else null
@@ -51,8 +50,8 @@ class ImagePagingSource @AssistedInject constructor(
                     prevKey = prevPage,
                     nextKey = nextPage
                 )
-            } else{
-                return  LoadResult.Error(HttpException(response))
+            } else {
+                return LoadResult.Error(HttpException(response))
             }
         } catch (e: HttpException) {
             return LoadResult.Error(e)

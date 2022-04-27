@@ -6,15 +6,16 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.*
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.observe
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
-import androidx.paging.LoadState
 import androidx.recyclerview.widget.GridLayoutManager
 import jp.kiriuru.pixabaytest.App
 import jp.kiriuru.pixabaytest.R
@@ -24,20 +25,12 @@ import jp.kiriuru.pixabaytest.data.model.Hits
 import jp.kiriuru.pixabaytest.databinding.FragmentListImageBinding
 import jp.kiriuru.pixabaytest.utils.ClickListener
 import jp.kiriuru.pixabaytest.utils.Const.Companion.BUNDLE
-import kotlinx.coroutines.FlowPreview
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import javax.inject.Provider
 
 
-@FlowPreview
 class ImageListFragment : Fragment(), ClickListener<Hits> {
-
-    private var defaultPerImage: Int = 30
 
     @Inject
     lateinit var viewModelFactory: Provider<ImageListViewModel.Factory>
@@ -48,11 +41,6 @@ class ImageListFragment : Fragment(), ClickListener<Hits> {
     private val binding get() = checkNotNull(_binding)
 
     private lateinit var adapter: ImageListAdapter
-//
-//    private val adapter by lazy(LazyThreadSafetyMode.NONE) {
-//        ImageListAdapter(this)
-//
-//    }
 
     override fun onAttach(context: Context) {
         (requireActivity().application as App).appComponent.imageListComponent()
@@ -60,13 +48,6 @@ class ImageListFragment : Fragment(), ClickListener<Hits> {
         super.onAttach(context)
 
     }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-
-    }
-
 
 
     override fun onCreateView(
@@ -82,39 +63,45 @@ class ImageListFragment : Fragment(), ClickListener<Hits> {
 
 
         initRV()
-
         lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-
-                viewModel.image.collectLatest {
-
-                    adapter.submitData(it)
-                    Log.d(TAG, " image data = ${it.toString()}")
-                }
+            viewModel.getImageList(" ").observe(requireActivity()) {
+                it.let { adapter.submitData(lifecycle, it) }
             }
         }
+//
+//        lifecycleScope.launch {
+//            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+//
+//                viewModel.image.collectLatest {
+//
+//                    adapter.submitData(it)
+//                    Log.d(TAG, " image data = ${it.toString()}")
+//                }
+//            }
+//        }
 
-        viewModel.query
-            .flowWithLifecycle(lifecycle, Lifecycle.State.CREATED)
-            .onEach { updateSearchQuery(it) }
-            .launchIn(lifecycleScope)
 
         binding.searchField.doAfterTextChanged { text ->
-            viewModel.setQuery(text.toString())
-            Log.d(TAG, " viewModel.setQuery = $text")
-        }
-
-
-
-        binding.btn.setOnClickListener {
-            binding.searchField.doAfterTextChanged {text ->
-                viewModel.setQuery(text.toString())
-
-                Toast.makeText(requireContext(), "$text", Toast.LENGTH_LONG)
-                    .show()
+            lifecycleScope.launch {
+                viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                    viewModel.getImageList(text.toString()).observe(requireActivity()) {
+                        it.let { adapter.submitData(lifecycle, it) }
+                    }
+                    Log.d(TAG, " viewModel.setQuery = $text")
+                }
             }
 
         }
+
+
+        binding.btn.isVisible = false
+//        binding.btn.setOnClickListener {
+//            lifecycleScope.launch {
+//                viewModel.getImageList("lol").observe(requireActivity()) {
+//                    it.let { adapter.submitData(lifecycle, it) }
+//                }
+//            }
+//        }
     }
 
     private fun updateSearchQuery(searchQuery: String) {
