@@ -13,7 +13,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.observe
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
@@ -25,6 +24,8 @@ import jp.kiriuru.pixabaytest.data.model.Hits
 import jp.kiriuru.pixabaytest.databinding.FragmentListImageBinding
 import jp.kiriuru.pixabaytest.utils.ClickListener
 import jp.kiriuru.pixabaytest.utils.Const.Companion.BUNDLE
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import javax.inject.Provider
@@ -63,30 +64,17 @@ class ImageListFragment : Fragment(), ClickListener<Hits> {
 
 
         initRV()
-        lifecycleScope.launch {
-            viewModel.getImageList(" ").observe(requireActivity()) {
-                it.let { adapter.submitData(lifecycle, it) }
-            }
+        lifecycleScope.launch(Dispatchers.IO) {
+
+            viewModel.getImageList(" ").collectLatest { adapter.submitData(it) }
+
         }
-//
-//        lifecycleScope.launch {
-//            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-//
-//                viewModel.image.collectLatest {
-//
-//                    adapter.submitData(it)
-//                    Log.d(TAG, " image data = ${it.toString()}")
-//                }
-//            }
-//        }
 
 
         binding.searchField.doAfterTextChanged { text ->
-            lifecycleScope.launch {
+            lifecycleScope.launch((Dispatchers.IO)) {
                 viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                    viewModel.getImageList(text.toString()).observe(requireActivity()) {
-                        it.let { adapter.submitData(lifecycle, it) }
-                    }
+                    viewModel.getImageList(text.toString()).collectLatest { adapter.submitData(it) }
                     Log.d(TAG, " viewModel.setQuery = $text")
                 }
             }
@@ -104,15 +92,6 @@ class ImageListFragment : Fragment(), ClickListener<Hits> {
 //        }
     }
 
-    private fun updateSearchQuery(searchQuery: String) {
-        Log.d(TAG, " updater searchQuery = $searchQuery")
-        with(binding.searchField) {
-            if ((text?.toString() ?: "") != searchQuery) {
-                Log.d(TAG, "Update query $text")
-                setText(searchQuery)
-            }
-        }
-    }
 
     private fun initRV() {
 
