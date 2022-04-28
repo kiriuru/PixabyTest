@@ -1,4 +1,13 @@
-Приложение по поиску и отображению картинок с Pixabay, реализовано 2 экрана(список изоборажений и выбранное из списка в отдельном) с помошью фрагментов в одной активити. 
-Используемый стек: Kotlin, MVVM, Coroutines, Glide, Retrofit, Navigation Component, ViewBinding, Dagger 2.
+Приложение по поиску и отображению картинок с Pixabay, реализовано 2 экрана(список изоборажений и выбранное из списка в отдельном) с помошью фрагментов в одной активити.
+ 
+Используемый стек: 
+ - Kotlin - основной язык.
+ - MVVM - используемая архитектура
+ - Coroutines/LiveData - стек для потоков.
+ - Glide/Coin - фреймворк для изображений. 
+ - Retrofit - фреймворк для работы с сетью.
+ - Navigation Component - навигация. 
+ - ViewBinding - работа с view.
+ - Dagger 2 - DI.
 
-Скачать тест версию: [build 1.4.2](https://drive.google.com/file/d/1OFt-L_83qrr3q6HRKmSXQC3NPUWp1X3a/view?usp=sharing)
+Тестовая версия: [DevBuild](https://drive.google.com/file/d/1HPs6nOcMgfscnpOZT-CKl-T1g3rSc9J1/view?usp=sharing)
