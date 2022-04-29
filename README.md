@@ -9,5 +9,6 @@
  - Navigation Component - навигация. 
  - ViewBinding - работа с view.
  - Dagger 2 - DI.
+ - Paging 3 - постраничное загрузка и отображение списка ихображений.
 
-Тестовая версия: [DevBuild](https://drive.google.com/file/d/1HPs6nOcMgfscnpOZT-CKl-T1g3rSc9J1/view?usp=sharing)
+Тестовая версия: [DevBuild](https://drive.google.com/file/d/1rt-kIGETj1a7MM-6PRKThBSWHMfNt9Dq/view?usp=sharing)
