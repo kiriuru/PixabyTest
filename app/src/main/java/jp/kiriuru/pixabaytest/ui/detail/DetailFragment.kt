@@ -11,6 +11,7 @@ import jp.kiriuru.pixabaytest.databinding.DetailFragmentBinding
 import jp.kiriuru.pixabaytest.utils.Const.Companion.BUNDLE
 import jp.kiriuru.pixabaytest.utils.GlideApp
 
+
 class DetailFragment : Fragment() {
 
     private var _binding: DetailFragmentBinding? = null

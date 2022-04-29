@@ -2,6 +2,7 @@ package jp.kiriuru.pixabaytest.ui.imageList
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -24,14 +25,14 @@ import jp.kiriuru.pixabaytest.data.model.Hits
 import jp.kiriuru.pixabaytest.databinding.FragmentListImageBinding
 import jp.kiriuru.pixabaytest.utils.ClickListener
 import jp.kiriuru.pixabaytest.utils.Const.Companion.BUNDLE
-import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import javax.inject.Provider
 
 
 class ImageListFragment : Fragment(), ClickListener<Hits> {
-
-    private var defaultPerImage: Int = 30
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -41,15 +42,15 @@ class ImageListFragment : Fragment(), ClickListener<Hits> {
     private var _binding: FragmentListImageBinding? = null
     private val binding get() = checkNotNull(_binding)
 
-    private lateinit var mAdapter: ImageListAdapter
-
+    private lateinit var adapter: ImageListAdapter
 
     override fun onAttach(context: Context) {
-        super.onAttach(context)
-
         (requireActivity().application as App).appComponent.imageListComponent()
             .create().inject(this)
+        super.onAttach(context)
+
     }
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -62,48 +63,40 @@ class ImageListFragment : Fragment(), ClickListener<Hits> {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        initRV()
 
-        binding.btn.isVisible = false
-        binding.searchField.doAfterTextChanged {
-            if (it != null) {
-                if (it.isNotEmpty()) {
-                    //       binding.btn.isVisible = true
-                    viewModel.setData(it.toString(), perPage = defaultPerImage)
-                } else binding.btn.isVisible = false
-            }
+        initRV()
+        lifecycleScope.launch(Dispatchers.IO) {
+
+            viewModel.getImageList(" ").collectLatest { adapter.submitData(it) }
+
         }
 
-//        binding.btn.setOnClickListener {
-//            defaultSearchReq = binding.searchField.text.toString()
-//            searchImage(binding.searchField.text.toString())
 
-        lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.data.collect {
-                    if (it != null) {
-                        update(it.hits)
-                    }
+        binding.searchField.doAfterTextChanged { text ->
+            lifecycleScope.launch((Dispatchers.IO)) {
+                viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                    viewModel.getImageList(text.toString()).collectLatest { adapter.submitData(it) }
+                    Log.d(TAG, " viewModel.setQuery = $text")
                 }
             }
+
         }
+
+
+        binding.btn.isVisible = false
     }
 
 
     private fun initRV() {
-        mAdapter = ImageListAdapter(this)
 
-        with(binding.recycleView) {
-            layoutManager = GridLayoutManager(context, 2)
+        adapter = ImageListAdapter(this)
+
+        with(binding) {
+            recycleView.layoutManager = GridLayoutManager(context, 2)
 //            layoutManager = LinearLayoutManager(this@MainActivity)
-            adapter = mAdapter
-
-            addItemDecoration(ImageDecoration(R.layout.list_item, 100, 0))
+            recycleView.adapter = adapter
+            recycleView.addItemDecoration(ImageDecoration(R.layout.list_item, 100, 0))
         }
-    }
-
-    private fun update(hits: List<Hits>) {
-        mAdapter.addSource(hits = hits)
     }
 
     override fun onDestroy() {
@@ -112,36 +105,16 @@ class ImageListFragment : Fragment(), ClickListener<Hits> {
     }
 
 
-    override fun setClickListener(data: Hits) {
+    override fun setClickListener(data: Hits?) {
+        Log.d(TAG, "bundle hits = $data")
         findNavController().navigate(
             R.id.action_image_list_to_image_detail,
             bundleOf(BUNDLE to data)
         )
     }
 
+    companion object {
+        const val TAG = "Fragment"
+    }
 
-    //Coroutine+alpha lifecycle
-//    private fun searchImage(req: String) {
-//        lifecycleScope.launch {
-//            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-//                viewModel.searchImage(req, defaultPerImage).collect {
-//                    it.let { resource ->
-//                        when (resource.status) {
-//                            Status.LOADING -> {
-//                            }
-//                            Status.ERROR -> {
-//                                Toast.makeText(context, it.message, Toast.LENGTH_SHORT).show()
-//                                Log.d(TAG_MAIN, "${it.message}")
-//                            }
-//                            Status.SUCCESS -> {
-//                                it.data?.let { items ->
-//                                    update(items.hits)
-//                                }
-//                            }
-//                        }
-//                    }
-//                }
-//            }
-//        }
-//    }
 }

@@ -31,3 +31,6 @@ data class Hits(
     @SerializedName("user") val user: String,
     @SerializedName("userImageURL") val userImageURL: String
 ) : Parcelable
+
+
+
