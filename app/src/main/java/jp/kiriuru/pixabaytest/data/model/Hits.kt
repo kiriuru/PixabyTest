@@ -1,59 +1,36 @@
 package jp.kiriuru.pixabaytest.data.model
 
+import android.os.Parcelable
+import com.google.gson.annotations.SerializedName
+import kotlinx.parcelize.Parcelize
 
+@Parcelize
 data class Hits(
-    val id: Long,
-    val pageURL: String,
-    val type: String,
-    val tags: String,
-    val previewURL: String,
-    val previewWidth: Long,
-    val previewHeight: Long,
-    val webformatURL: String,
-    val webformatWidth: Long,
-    val webformatHeight: Long,
-    val largeImageURL: String,
-    val fullHDURL: String,
-    val imageURL: String,
-    val imageWidth: Long,
-    val imageHeight: Long,
-    val imageSize: Long,
-    val views: Long,
-    val downloads: Long,
-    val favorites: Long,
-    val likes: Long,
-    val comments: Long,
-    val userId: String,
-    val user: String,
-    val userImageURL: String
-)
+    @SerializedName("id") val id: Long,
+    @SerializedName("pageURL") val pageURL: String,
+    @SerializedName("type") val type: String,
+    @SerializedName("tags") val tags: String,
+    @SerializedName("previewURL") val previewURL: String,
+    @SerializedName("previewWidth") val previewWidth: Long,
+    @SerializedName("previewHeight") val previewHeight: Long,
+    @SerializedName("webformatURL") val webformatURL: String,
+    @SerializedName("webformatWidth") val webformatWidth: Long,
+    @SerializedName("webformatHeight") val webformatHeight: Long,
+    @SerializedName("largeImageURL") val largeImageURL: String,
+    @SerializedName("fullHDURL") val fullHDURL: String,
+    @SerializedName("imageURL") val imageURL: String,
+    @SerializedName("imageWidth") val imageWidth: Long,
+    @SerializedName("imageHeight") val imageHeight: Long,
+    @SerializedName("imageSize") val imageSize: Long,
+    @SerializedName("views") val views: Long,
+    @SerializedName("downloads") val downloads: Long,
+    @SerializedName("favorites") val favorites: Long,
+    @SerializedName("likes") val likes: Long,
+    @SerializedName("comments") val comments: Long,
+    @SerializedName("user_id") val userId: String,
+    @SerializedName("user") val user: String,
+    @SerializedName("userImageURL") val userImageURL: String
+) : Parcelable
 
 
-internal fun HitsDto.toHits(): Hits {
-    return Hits(
-        id = id,
-        pageURL = pageURL,
-        type = type,
-        tags = tags,
-        previewURL = previewURL,
-        previewWidth = previewWidth,
-        previewHeight = previewHeight,
-        webformatURL = webformatURL,
-        webformatWidth = webformatWidth,
-        webformatHeight = webformatHeight,
-        largeImageURL = largeImageURL,
-        fullHDURL = fullHDURL,
-        imageURL = imageURL,
-        imageWidth = imageWidth,
-        imageHeight = imageHeight,
-        imageSize = imageSize,
-        views = views,
-        downloads = downloads,
-        favorites = favorites,
-        likes = likes,
-        comments = comments,
-        userId = userId,
-        user = user,
-        userImageURL = userImageURL
-    )
-}
+

@@ -7,6 +7,7 @@ import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import jp.kiriuru.pixabaytest.data.model.Hits
+import jp.kiriuru.pixabaytest.utils.Const.Companion.MAX_PAGE_SIZE
 import retrofit2.HttpException
 
 
@@ -29,7 +30,7 @@ class ImagePagingSource @AssistedInject constructor(
 //        }
         try {
             val page: Int = params.key ?: 1
-            val pageSize: Int = params.loadSize.coerceAtMost(Api.MAX_PAGE_SIZE)
+            val pageSize: Int = params.loadSize.coerceAtMost(MAX_PAGE_SIZE)
             val response = apiService.searchImage(q = query, page = page, perPage = pageSize)
             Log.d(
                 TAG, "query $query load data ${response.body()!!.hits[1]} " +

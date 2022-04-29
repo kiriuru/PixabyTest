@@ -1,5 +1,6 @@
 package jp.kiriuru.pixabaytest.utils
 
+import android.annotation.SuppressLint
 import android.content.Context
 import com.bumptech.glide.GlideBuilder
 import com.bumptech.glide.annotation.GlideModule
@@ -14,6 +15,7 @@ class GlideModule : AppGlideModule() {
         return false
     }
 
+    @SuppressLint("CheckResult")
     override fun applyOptions(context: Context, builder: GlideBuilder) {
         super.applyOptions(context, builder)
         builder.apply {

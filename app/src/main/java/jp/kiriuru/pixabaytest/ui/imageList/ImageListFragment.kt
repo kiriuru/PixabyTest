@@ -12,6 +12,7 @@ import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
@@ -34,9 +35,9 @@ import javax.inject.Provider
 class ImageListFragment : Fragment(), ClickListener<Hits> {
 
     @Inject
-    lateinit var viewModelFactory: Provider<ImageListViewModel.Factory>
+    lateinit var viewModelFactory: ViewModelProvider.Factory
 
-    private val viewModel by viewModels<ImageListViewModel> { viewModelFactory.get() }
+    private val viewModel by viewModels<ImageListViewModel> { viewModelFactory }
 
     private var _binding: FragmentListImageBinding? = null
     private val binding get() = checkNotNull(_binding)
@@ -83,13 +84,6 @@ class ImageListFragment : Fragment(), ClickListener<Hits> {
 
 
         binding.btn.isVisible = false
-//        binding.btn.setOnClickListener {
-//            lifecycleScope.launch {
-//                viewModel.getImageList("lol").observe(requireActivity()) {
-//                    it.let { adapter.submitData(lifecycle, it) }
-//                }
-//            }
-//        }
     }
 
 
@@ -112,6 +106,7 @@ class ImageListFragment : Fragment(), ClickListener<Hits> {
 
 
     override fun setClickListener(data: Hits?) {
+        Log.d(TAG, "bundle hits = $data")
         findNavController().navigate(
             R.id.action_image_list_to_image_detail,
             bundleOf(BUNDLE to data)

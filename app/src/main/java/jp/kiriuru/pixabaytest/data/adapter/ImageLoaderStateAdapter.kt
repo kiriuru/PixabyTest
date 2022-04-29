@@ -1,4 +1,4 @@
-package jp.kiriuru.pixabaytest.ui.imageList
+package jp.kiriuru.pixabaytest.data.adapter
 
 import android.view.LayoutInflater
 import android.view.View
