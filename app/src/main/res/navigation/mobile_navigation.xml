@@ -6,13 +6,17 @@
     app:startDestination="@+id/image_list">
 
     <fragment
+
         android:id="@+id/image_list"
         android:name="jp.kiriuru.pixabaytest.ui.imageList.ImageListFragment"
         android:label="Search Images"
         tools:layout="@layout/fragment_list_image">
         <action
             android:id="@+id/action_image_list_to_image_detail"
-            app:destination="@id/image_detail" />
+            app:popUpToSaveState="true"
+            app:restoreState="true"
+            app:destination="@id/image_detail"
+            app:popUpTo="@id/image_list"/>
     </fragment>
     <fragment
         android:id="@+id/image_detail"

@@ -46,6 +46,7 @@ class DetailFragment : Fragment() {
         binding.usernameDetail.text = hits.user
     }
 
+
     override fun onDestroy() {
         super.onDestroy()
         _binding = null

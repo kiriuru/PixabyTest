@@ -22,7 +22,11 @@ class ImageListAdapter(private val clickListener: ClickListener<Hits>) :
 
     class ViewHolder(private val binding: ListItemBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(hits: Hits?, clickListener: ClickListener<Hits>) {
-            binding.img.setOnClickListener { clickListener.setClickListener(hits) }
+            binding.img.setOnClickListener {
+                if (hits != null) {
+                    clickListener.setClickListener(hits)
+                }
+            }
             with(binding) {
                 username.text = hits?.user
 

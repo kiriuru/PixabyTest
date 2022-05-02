@@ -30,7 +30,11 @@ data class Hits(
     @SerializedName("user_id") val userId: String,
     @SerializedName("user") val user: String,
     @SerializedName("userImageURL") val userImageURL: String
-) : Parcelable
+) : Parcelable {
+    override fun hashCode(): Int {
+        return super.hashCode()
+    }
+}
 
 
 

@@ -17,6 +17,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import jp.kiriuru.pixabaytest.App
 import jp.kiriuru.pixabaytest.R
 import jp.kiriuru.pixabaytest.data.adapter.ImageListAdapter
@@ -25,11 +26,9 @@ import jp.kiriuru.pixabaytest.data.model.Hits
 import jp.kiriuru.pixabaytest.databinding.FragmentListImageBinding
 import jp.kiriuru.pixabaytest.utils.ClickListener
 import jp.kiriuru.pixabaytest.utils.Const.Companion.BUNDLE
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-import javax.inject.Provider
 
 
 class ImageListFragment : Fragment(), ClickListener<Hits> {
@@ -65,17 +64,22 @@ class ImageListFragment : Fragment(), ClickListener<Hits> {
 
 
         initRV()
-        lifecycleScope.launch(Dispatchers.IO) {
 
-            viewModel.getImageList(" ").collectLatest { adapter.submitData(it) }
-
+        lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.data.collectLatest {
+                    if (it != null) {
+                        adapter.submitData(viewLifecycleOwner.lifecycle,it)
+                    }
+                }
+            }
         }
 
 
         binding.searchField.doAfterTextChanged { text ->
-            lifecycleScope.launch((Dispatchers.IO)) {
+            lifecycleScope.launch {
                 viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                    viewModel.getImageList(text.toString()).collectLatest { adapter.submitData(it) }
+                    viewModel.setQuery(text.toString())
                     Log.d(TAG, " viewModel.setQuery = $text")
                 }
             }
@@ -92,11 +96,13 @@ class ImageListFragment : Fragment(), ClickListener<Hits> {
         adapter = ImageListAdapter(this)
 
         with(binding) {
-            recycleView.layoutManager = GridLayoutManager(context, 2)
-//            layoutManager = LinearLayoutManager(this@MainActivity)
+            recycleView.layoutManager = GridLayoutManager(requireActivity(), 4)
+            // LinearLayoutManager(requireActivity())
             recycleView.adapter = adapter
             recycleView.addItemDecoration(ImageDecoration(R.layout.list_item, 100, 0))
         }
+        adapter.stateRestorationPolicy =
+            RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
     }
 
     override fun onDestroy() {
@@ -105,12 +111,15 @@ class ImageListFragment : Fragment(), ClickListener<Hits> {
     }
 
 
-    override fun setClickListener(data: Hits?) {
+    override fun setClickListener(data: Hits) {
         Log.d(TAG, "bundle hits = $data")
-        findNavController().navigate(
-            R.id.action_image_list_to_image_detail,
-            bundleOf(BUNDLE to data)
-        )
+
+        findNavController()
+            .navigate(
+                R.id.action_image_list_to_image_detail,
+                bundleOf(BUNDLE to data)
+            )
+
     }
 
     companion object {
