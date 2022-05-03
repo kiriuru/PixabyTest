@@ -15,8 +15,7 @@
             android:id="@+id/action_image_list_to_image_detail"
             app:popUpToSaveState="true"
             app:restoreState="true"
-            app:destination="@id/image_detail"
-            app:popUpTo="@id/image_list"/>
+            app:destination="@id/image_detail" />
     </fragment>
     <fragment
         android:id="@+id/image_detail"

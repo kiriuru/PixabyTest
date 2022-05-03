@@ -6,6 +6,8 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.core.widget.doAfterTextChanged
@@ -42,11 +44,19 @@ class ImageListFragment : Fragment(), ClickListener<Hits> {
     private val binding get() = checkNotNull(_binding)
 
     private lateinit var adapter: ImageListAdapter
+    private lateinit var editText: EditText
 
     override fun onAttach(context: Context) {
         (requireActivity().application as App).appComponent.imageListComponent()
             .create().inject(this)
+
         super.onAttach(context)
+
+
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
 
     }
 
@@ -62,32 +72,39 @@ class ImageListFragment : Fragment(), ClickListener<Hits> {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-
+        editText = requireActivity().findViewById(R.id.search_fieldTB)
         initRV()
 
         lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.data.collectLatest {
                     if (it != null) {
-                        adapter.submitData(viewLifecycleOwner.lifecycle,it)
+                        adapter.submitData(viewLifecycleOwner.lifecycle, it)
+
                     }
                 }
             }
         }
 
-
-        binding.searchField.doAfterTextChanged { text ->
+        editText.doAfterTextChanged { text ->
             lifecycleScope.launch {
                 viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                     viewModel.setQuery(text.toString())
                     Log.d(TAG, " viewModel.setQuery = $text")
                 }
             }
-
         }
+//        binding.searchField.doAfterTextChanged { text ->
+//            lifecycleScope.launch {
+//                viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+//                    viewModel.setQuery(text.toString())
+//                    Log.d(TAG, " viewModel.setQuery = $text")
+//                }
+//            }
+//
+//        }
 
 
-        binding.btn.isVisible = false
     }
 
 
@@ -101,8 +118,7 @@ class ImageListFragment : Fragment(), ClickListener<Hits> {
             recycleView.adapter = adapter
             recycleView.addItemDecoration(ImageDecoration(R.layout.list_item, 100, 0))
         }
-        adapter.stateRestorationPolicy =
-            RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
+
     }
 
     override fun onDestroy() {

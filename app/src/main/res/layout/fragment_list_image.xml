@@ -9,11 +9,17 @@
     android:focusableInTouchMode="true"
     tools:context=".ui.imageList.ImageListFragment">
 
+
+
+
+
+
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/startGuideLine"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
+        android:layout_marginStart="16dp"
         app:layout_constraintGuide_percent="0.03" />
 
     <androidx.constraintlayout.widget.Guideline
@@ -23,25 +29,29 @@
         android:orientation="vertical"
         app:layout_constraintGuide_percent="0.973236" />
 
-    <EditText
-        android:id="@+id/search_field"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:autofillHints="поиск"
-        android:inputType="text"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:ignore="LabelFor" />
+<!--    <EditText-->
+<!--        android:id="@+id/search_field"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="48dp"-->
+<!--        android:autofillHints="поиск"-->
+<!--        android:background="@drawable/rounded"-->
+<!--        android:hint="Search Images"-->
+<!--        android:inputType="text"-->
+<!--        android:textColorHint="#757575"-->
+<!--        app:layout_constraintStart_toStartOf="@id/startGuideLine"-->
+<!--        app:layout_constraintEnd_toEndOf="@id/endGuideLine"-->
+<!--        app:layout_constraintTop_toTopOf="parent"-->
+<!--        tools:ignore="LabelFor" />-->
 
-    <Button
-        android:id="@+id/btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/search_btn_text"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/search_field" />
+
+    <!--    <Button-->
+    <!--        android:id="@+id/btn"-->
+    <!--        android:layout_width="wrap_content"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:text="@string/search_btn_text"-->
+    <!--        app:layout_constraintEnd_toEndOf="parent"-->
+    <!--        app:layout_constraintStart_toStartOf="parent"-->
+    <!--        app:layout_constraintTop_toBottomOf="@+id/search_field" />-->
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycle_view"
@@ -54,7 +64,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@id/endGuideLine"
         app:layout_constraintStart_toStartOf="@id/startGuideLine"
-        app:layout_constraintTop_toBottomOf="@id/btn"
+      app:layout_constraintTop_toTopOf="parent"
         tools:listitem="@layout/list_item" />
 
     <ProgressBar
@@ -63,12 +73,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        app:layout_constraintTop_toTopOf="parent"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        android:visibility="gone"
-        />
+        app:layout_constraintTop_toTopOf="parent" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

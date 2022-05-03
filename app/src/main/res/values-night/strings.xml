@@ -7,4 +7,5 @@
     <string name="title_home">Images</string>
     <string name="title_dashboard">dash</string>
     <string name="title_notifications">notifications</string>
+    <string name="search_images_hint">Search Images</string>
 </resources>
