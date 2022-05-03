@@ -27,7 +27,6 @@ interface AppComponent {
     fun imageListComponent(): ImageListComponent.Factory
 
     val imageRepository: ImageRepository
-//    val queryImageUseCase:QueryImageUseCase
 }
 
 @Module(subcomponents = [ImageListComponent::class])

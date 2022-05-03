@@ -1,15 +1,12 @@
 package jp.kiriuru.pixabaytest.data.adapter
 
 import android.content.Context
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import coil.load
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import jp.kiriuru.pixabaytest.data.model.Hits
 import jp.kiriuru.pixabaytest.databinding.ListItemBinding
@@ -82,8 +79,6 @@ class ImageListAdapter(private val clickListener: ClickListener<Hits>) :
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bind(getItem(position), clickListener)
-
-        //  holder.binding.img.setOnClickListener { clickListener.setClickListener(getItem(position)) }
     }
 
     object HitsDiffItemCallback : DiffUtil.ItemCallback<Hits>() {

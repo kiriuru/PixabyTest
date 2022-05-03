@@ -33,11 +33,6 @@ class ImageListViewModel @Inject constructor(
         }
     }
 
-
-    companion object {
-        const val TAG = "ViewModel"
-    }
-
     private fun getImageList(query: String): Flow<PagingData<Hits>> =
         repository.getAllImages(query)
             .cachedIn(viewModelScope)

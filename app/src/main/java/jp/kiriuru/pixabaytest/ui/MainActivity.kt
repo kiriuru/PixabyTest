@@ -55,18 +55,18 @@ class MainActivity : AppCompatActivity() {
 
 
 
-            appBarConfiguration = AppBarConfiguration(
-                setOf(
-                    R.id.image_list, R.id.navigation_notifications, R.id.navigation_dashboard
-                )
+        appBarConfiguration = AppBarConfiguration(
+            setOf(
+                R.id.image_list, R.id.navigation_notifications, R.id.navigation_dashboard
             )
-            setupActionBarWithNavController(navController, appBarConfiguration)
-        }
-
-        override fun onSupportNavigateUp(): Boolean {
-            return navController.navigateUp(appBarConfiguration)
-        }
+        )
+        setupActionBarWithNavController(navController, appBarConfiguration)
     }
+
+    override fun onSupportNavigateUp(): Boolean {
+        return navController.navigateUp(appBarConfiguration)
+    }
+}
 
 
 

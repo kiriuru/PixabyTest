@@ -25,9 +25,6 @@ class ImagePagingSource @AssistedInject constructor(
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Hits> {
         Log.d(TAG, " load paging data 1, $query")
-//        if (query.isBlank()) {
-//            return LoadResult.Page(emptyList(), prevKey = null, nextKey = null)
-//        }
         try {
             val page: Int = params.key ?: 1
             val pageSize: Int = params.loadSize.coerceAtMost(MAX_PAGE_SIZE)
