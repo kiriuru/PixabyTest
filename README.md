@@ -11,4 +11,4 @@
  - Dagger 2 - DI.
  - Paging 3 - постраничная загрузка и отображение списка изображений.
 
-Тестовая версия: [DevBuild](https://drive.google.com/file/d/1rt-kIGETj1a7MM-6PRKThBSWHMfNt9Dq/view?usp=sharing)
+Тестовая версия: [DevBuild 1.6](https://drive.google.com/file/d/1lLiybDHru08MlNnPTl3ESn9e_ysfirjI/view?usp=sharing)
