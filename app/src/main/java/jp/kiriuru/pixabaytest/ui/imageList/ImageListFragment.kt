@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import androidx.core.os.bundleOf
+import androidx.core.view.isVisible
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -16,10 +17,12 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
+import androidx.paging.LoadState
 import androidx.recyclerview.widget.GridLayoutManager
 import jp.kiriuru.pixabaytest.App
 import jp.kiriuru.pixabaytest.R
 import jp.kiriuru.pixabaytest.data.adapter.ImageListAdapter
+import jp.kiriuru.pixabaytest.data.adapter.ImageLoaderStateAdapter
 import jp.kiriuru.pixabaytest.data.adapter.decoration.ImageDecoration
 import jp.kiriuru.pixabaytest.data.model.Hits
 import jp.kiriuru.pixabaytest.databinding.FragmentListImageBinding
@@ -41,8 +44,8 @@ class ImageListFragment : Fragment(), ClickListener<Hits> {
     private var _binding: FragmentListImageBinding? = null
     private val binding get() = checkNotNull(_binding)
 
-    private lateinit var adapter: ImageListAdapter
     private lateinit var editText: EditText
+    private val adapter by lazy(LazyThreadSafetyMode.NONE) { ImageListAdapter(this) }
 
     @OptIn(FlowPreview::class)
     override fun onAttach(context: Context) {
@@ -86,29 +89,27 @@ class ImageListFragment : Fragment(), ClickListener<Hits> {
                 }
             }
         }
-//        binding.searchField.doAfterTextChanged { text ->
-//            lifecycleScope.launch {
-//                viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-//                    viewModel.setQuery(text.toString())
-//                    Log.d(TAG, " viewModel.setQuery = $text")
-//                }
-//            }
-//
-//        }
-
 
     }
 
 
     private fun initRV() {
 
-        adapter = ImageListAdapter(this)
 
         with(binding) {
             recycleView.layoutManager = GridLayoutManager(requireActivity(), 4)
             // LinearLayoutManager(requireActivity())
-            recycleView.adapter = adapter
+            recycleView.adapter = adapter.withLoadStateHeaderAndFooter(
+                header = ImageLoaderStateAdapter(),
+                footer = ImageLoaderStateAdapter()
+            )
             recycleView.addItemDecoration(ImageDecoration(R.layout.list_item, 100, 0))
+        }
+        adapter.addLoadStateListener {
+            with(binding) {
+                recycleView.isVisible = it.refresh != LoadState.Loading
+                progress.isVisible = it.refresh == LoadState.Loading
+            }
         }
 
     }

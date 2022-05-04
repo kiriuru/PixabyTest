@@ -49,7 +49,7 @@ class ImageListAdapter(private val clickListener: ClickListener<Hits>) :
                 GlideApp.with(viewContext)
                     .load(previewUrl)
             )
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
                 .into(imageView)
         }
 
@@ -60,7 +60,7 @@ class ImageListAdapter(private val clickListener: ClickListener<Hits>) :
         ) {
             GlideApp.with(viewContext).load(
                 url
-            ).diskCacheStrategy(DiskCacheStrategy.ALL)
+            ).diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
                 .into(imageView)
         }
 

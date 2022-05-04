@@ -20,7 +20,7 @@ class ImageRepositoryImpl @Inject constructor(private val imagePagingSource: Ima
 
     override fun getAllImages(query: String): Flow<PagingData<Hits>> {
         return Pager(
-            config = PagingConfig(pageSize = DEFAULT_PAGE_SIZE, enablePlaceholders = true),
+            config = PagingConfig(pageSize = DEFAULT_PAGE_SIZE, enablePlaceholders = false),
             pagingSourceFactory = { imagePagingSource.create(query) },
             initialKey = 1
         ).flow

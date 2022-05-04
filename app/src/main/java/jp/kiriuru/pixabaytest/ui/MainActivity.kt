@@ -48,11 +48,12 @@ class MainActivity : AppCompatActivity() {
         navController.addOnDestinationChangedListener { _, destination, _ ->
             if (destination.id == R.id.image_detail) {
                 mBinding.searchFieldTB.visibility = View.GONE
+                mBinding.appBar.setBackgroundResource(R.color.purple_700)
             } else {
                 mBinding.searchFieldTB.visibility = View.VISIBLE
+                mBinding.appBar.setBackgroundResource(R.color.transparent)
             }
         }
-
 
 
         appBarConfiguration = AppBarConfiguration(

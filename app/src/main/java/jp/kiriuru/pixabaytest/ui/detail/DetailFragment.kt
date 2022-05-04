@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.bumptech.glide.load.engine.DiskCacheStrategy
 import jp.kiriuru.pixabaytest.data.model.Hits
 import jp.kiriuru.pixabaytest.databinding.DetailFragmentBinding
 import jp.kiriuru.pixabaytest.utils.Const.Companion.BUNDLE
@@ -38,11 +37,11 @@ class DetailFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         GlideApp.with(view.context).load(hits.largeImageURL)
-            .diskCacheStrategy(DiskCacheStrategy.ALL)
             .into(binding.imgDetail)
 
-        GlideApp.with(view.context).load(hits.userImageURL).diskCacheStrategy(DiskCacheStrategy.ALL)
+        GlideApp.with(view.context).load(hits.userImageURL)
             .into(binding.avatarDetail)
+
         binding.usernameDetail.text = hits.user
     }
 
