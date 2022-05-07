@@ -12,4 +12,4 @@
  - Paging 3 - постраничная загрузка и отображение списка изображений.
  - PhotoView by Chris Banes - для масштабирования ImageView.
 
-Тестовая версия: [DevBuild 1.6.2](https://drive.google.com/file/d/1Y_DRHe80xb4wvz95UYv6h7CmAaCC_uVy/view?usp=sharing)
+Тестовая версия: [DevBuild 1.6.3](https://drive.google.com/file/d/1opQW8klUv1fu6MviT9y6-edInr6hQM3J/view?usp=sharing)
