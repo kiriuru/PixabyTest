@@ -11,7 +11,7 @@ import retrofit2.http.Query
 
 interface Api {
     @GET("?")
-    suspend fun searchImage(
+    suspend fun searchImages(
         @Query("key") key: String = API_KEY,
         @Query("q") q: String,
         @Query("page") @IntRange(from = 1) page: Int = 1,

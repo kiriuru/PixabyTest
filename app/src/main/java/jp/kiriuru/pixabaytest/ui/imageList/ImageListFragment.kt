@@ -44,7 +44,8 @@ class ImageListFragment : Fragment(), ClickListener<Hits> {
     private var _binding: FragmentListImageBinding? = null
     private val binding get() = checkNotNull(_binding)
 
-    private lateinit var editText: EditText
+    private val toolbarSearchEditText by lazy { requireActivity().findViewById<EditText>(R.id.search_fieldTB) }
+
     private val adapter by lazy(LazyThreadSafetyMode.NONE) { ImageListAdapter(this) }
 
     @OptIn(FlowPreview::class)
@@ -67,21 +68,20 @@ class ImageListFragment : Fragment(), ClickListener<Hits> {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        editText = requireActivity().findViewById(R.id.search_fieldTB)
-        initRV()
+        initListImagesRV()
 
         lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.data.collectLatest {
-                    if (it != null) {
-                        adapter.submitData(viewLifecycleOwner.lifecycle, it)
+                viewModel.data.collectLatest { data ->
+                    if (data != null) {
+                        adapter.submitData(viewLifecycleOwner.lifecycle, data)
 
                     }
                 }
             }
         }
 
-        editText.doAfterTextChanged { text ->
+        toolbarSearchEditText.doAfterTextChanged { text ->
             lifecycleScope.launch {
                 viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                     viewModel.setQuery(text.toString())
@@ -93,22 +93,21 @@ class ImageListFragment : Fragment(), ClickListener<Hits> {
     }
 
 
-    private fun initRV() {
-
+    private fun initListImagesRV() {
 
         with(binding) {
-            recycleView.layoutManager = GridLayoutManager(requireActivity(), 4)
+            recycleViewImagesList.layoutManager = GridLayoutManager(requireActivity(), 3)
             // LinearLayoutManager(requireActivity())
-            recycleView.adapter = adapter.withLoadStateHeaderAndFooter(
+            recycleViewImagesList.adapter = adapter.withLoadStateHeaderAndFooter(
                 header = ImageLoaderStateAdapter(),
                 footer = ImageLoaderStateAdapter()
             )
-            recycleView.addItemDecoration(ImageDecoration(R.layout.list_item, 100, 0))
+            recycleViewImagesList.addItemDecoration(ImageDecoration(R.layout.list_item, 100, 0))
         }
-        adapter.addLoadStateListener {
+        adapter.addLoadStateListener { loadStates ->
             with(binding) {
-                recycleView.isVisible = it.refresh != LoadState.Loading
-                progress.isVisible = it.refresh == LoadState.Loading
+                recycleViewImagesList.isVisible = loadStates.refresh != LoadState.Loading
+                progress.isVisible = loadStates.refresh == LoadState.Loading
             }
         }
 

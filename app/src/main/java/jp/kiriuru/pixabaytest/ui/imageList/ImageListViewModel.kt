@@ -19,22 +19,22 @@ class ImageListViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            getImageList(" ").collectLatest {
-                _data.tryEmit(it)
+            getImagesList(" ").collectLatest { pagingData ->
+                _data.tryEmit(pagingData)
             }
         }
     }
 
     fun setQuery(query: String) {
         viewModelScope.launch {
-            getImageList(query).collectLatest {
-                _data.tryEmit(it)
+            getImagesList(query = query).collectLatest { pagingData ->
+                _data.tryEmit(pagingData)
             }
         }
     }
 
-    private fun getImageList(query: String): Flow<PagingData<Hits>> =
-        repository.getAllImages(query)
+    private fun getImagesList(query: String): Flow<PagingData<Hits>> =
+        repository.getAllImages(query = query)
             .cachedIn(viewModelScope)
             .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000L), PagingData.empty())
 

@@ -37,6 +37,7 @@ class DetailFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         GlideApp.with(view.context).load(hits.largeImageURL)
+            .thumbnail(GlideApp.with(view.context).load(hits.previewURL))
             .into(binding.imgDetail)
 
         GlideApp.with(view.context).load(hits.userImageURL)

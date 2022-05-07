@@ -28,7 +28,7 @@ class ImagePagingSource @AssistedInject constructor(
         try {
             val page: Int = params.key ?: 1
             val pageSize: Int = params.loadSize.coerceAtMost(MAX_PAGE_SIZE)
-            val response = apiService.searchImage(q = query, page = page, perPage = pageSize)
+            val response = apiService.searchImages(q = query, page = page, perPage = pageSize)
             Log.d(
                 TAG, "query $query load data ${response.body()!!.hits[1]} " +
                         "\n page $page " +
