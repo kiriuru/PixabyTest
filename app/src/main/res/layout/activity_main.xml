@@ -11,29 +11,32 @@
         android:id="@+id/appBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:elevation="16dp"
+        android:background="@drawable/rounded2"
+        app:elevation="64dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        tools:targetApi="lollipop">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:elevation="16dp"
+            android:padding="16dp"
             app:layout_constraintTop_toTopOf="parent">
 
             <EditText
                 android:id="@+id/search_fieldTB"
                 android:layout_width="match_parent"
-                android:layout_height="45dp"
+                android:layout_height="48dp"
                 android:layout_marginEnd="16dp"
+                android:autofillHints=" "
+                android:background="@drawable/rounded"
+                android:elevation="16dp"
+                android:hint="@string/search_images_hint"
+                android:inputType="text"
                 android:paddingStart="16dp"
                 android:paddingEnd="16dp"
                 android:textColor="@color/black"
-                android:autofillHints=" "
-                android:background="@drawable/rounded"
-                android:hint="@string/search_images_hint"
-                android:inputType="text"
                 android:textColorHint="#757575"
                 tools:ignore="LabelFor" />
 
@@ -46,6 +49,7 @@
         android:name="androidx.navigation.fragment.NavHostFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:visibility="visible"
         app:defaultNavHost="true"
         app:layout_constraintBottom_toTopOf="@id/bottom_nav_view"
         app:layout_constraintLeft_toLeftOf="parent"

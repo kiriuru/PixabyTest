@@ -4,10 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-
     android:layout_margin="5dp"
-    app:cardCornerRadius="5dp"
-    app:cardElevation="5dp">
+    android:background="@drawable/rounded2"
+    app:cardCornerRadius="8dp"
+    app:cardElevation="8dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
 
@@ -20,32 +20,21 @@
             android:layout_width="match_parent"
             android:layout_height="150dp"
             android:contentDescription="@string/app_name"
-            android:elevation="4dp"
             android:scaleType="centerCrop"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:targetApi="lollipop" />
 
-        <View
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:background="#14000000"
-            android:elevation="5dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="@id/img"
-            app:layout_constraintStart_toStartOf="@id/img"
-            app:layout_constraintTop_toTopOf="@+id/img"
-            tools:targetApi="lollipop" />
 
         <ImageView
             android:id="@+id/avatar"
             android:layout_width="26dp"
             android:layout_height="26dp"
+            android:layout_marginStart="8dp"
             android:layout_marginBottom="24dp"
-            android:elevation="10dp"
+            android:elevation="16dp"
             android:src="@drawable/user"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -57,7 +46,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:elevation="10dp"
+            android:elevation="16dp"
             android:text="@string/user_name"
             android:textColor="@color/white"
             app:layout_constraintBottom_toBottomOf="@+id/avatar"
