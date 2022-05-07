@@ -10,5 +10,6 @@
  - ViewBinding - работа с view.
  - Dagger 2 - DI.
  - Paging 3 - постраничная загрузка и отображение списка изображений.
+ - PhotoView by Chris Banes - для масштабирования ImageView.
 
-Тестовая версия: [DevBuild 1.6](https://drive.google.com/file/d/1LY8qBk23vw3pScREIn60DqV2Eo5bcXya/view?usp=sharing)
+Тестовая версия: [DevBuild 1.6.2](https://drive.google.com/file/d/1Y_DRHe80xb4wvz95UYv6h7CmAaCC_uVy/view?usp=sharing)
