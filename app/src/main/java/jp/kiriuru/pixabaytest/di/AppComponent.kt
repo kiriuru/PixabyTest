@@ -4,7 +4,7 @@ import android.content.Context
 import dagger.BindsInstance
 import dagger.Component
 import dagger.Module
-import jp.kiriuru.pixabaytest.data.repository.ImageRepository
+import jp.kiriuru.pixabaytest.data.repository.PexelsImageRepository
 import jp.kiriuru.pixabaytest.ui.imageList.ImageListComponent
 
 
@@ -26,7 +26,8 @@ interface AppComponent {
 
     fun imageListComponent(): ImageListComponent.Factory
 
-    val imageRepository: ImageRepository
+    //   val imageRepository: ImageRepository
+    val pexelsImageRepository: PexelsImageRepository
 }
 
 @Module(subcomponents = [ImageListComponent::class])

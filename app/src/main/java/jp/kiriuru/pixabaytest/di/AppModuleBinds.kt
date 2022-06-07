@@ -2,13 +2,17 @@ package jp.kiriuru.pixabaytest.di
 
 import dagger.Binds
 import dagger.Module
-import jp.kiriuru.pixabaytest.data.repository.ImageRepository
-import jp.kiriuru.pixabaytest.data.repository.ImageRepositoryImpl
+import jp.kiriuru.pixabaytest.data.repository.PexelsImageRepository
+import jp.kiriuru.pixabaytest.data.repository.PexelsImageRepositoryImpl
 
 @Module
 interface AppModuleBinds {
 
-    @Suppress("Fun Name")
+//    @Suppress("PixabayRepo")
+//    @Binds
+//    fun bindRepositoryPixabay(imageRepositoryImpl: ImageRepositoryImpl): ImageRepository
+
+    @Suppress("PexelsRepo")
     @Binds
-    fun bindRepository(imageRepositoryImpl: ImageRepositoryImpl): ImageRepository
+    fun bindRepositoryPexels(pexelsImageRepositoryImpl: PexelsImageRepositoryImpl): PexelsImageRepository
 }

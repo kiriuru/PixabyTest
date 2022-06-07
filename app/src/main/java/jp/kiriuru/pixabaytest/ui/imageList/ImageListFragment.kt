@@ -21,20 +21,19 @@ import androidx.paging.LoadState
 import androidx.recyclerview.widget.GridLayoutManager
 import jp.kiriuru.pixabaytest.App
 import jp.kiriuru.pixabaytest.R
-import jp.kiriuru.pixabaytest.data.adapter.ImageListAdapter
 import jp.kiriuru.pixabaytest.data.adapter.ImageLoaderStateAdapter
+import jp.kiriuru.pixabaytest.data.adapter.PexelsImageListAdapter
 import jp.kiriuru.pixabaytest.data.adapter.decoration.ImageDecoration
-import jp.kiriuru.pixabaytest.data.model.Hits
+import jp.kiriuru.pixabaytest.data.model.pexelsEntity.Photo
 import jp.kiriuru.pixabaytest.databinding.FragmentListImageBinding
 import jp.kiriuru.pixabaytest.utils.ClickListener
 import jp.kiriuru.pixabaytest.utils.Const.Companion.BUNDLE
-import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 
-class ImageListFragment : Fragment(), ClickListener<Hits> {
+class ImageListFragment : Fragment(), ClickListener<Photo> {
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -46,9 +45,8 @@ class ImageListFragment : Fragment(), ClickListener<Hits> {
 
     private val toolbarSearchEditText by lazy { requireActivity().findViewById<EditText>(R.id.search_fieldTB) }
 
-    private val adapter by lazy(LazyThreadSafetyMode.NONE) { ImageListAdapter(this) }
+    private val adapter by lazy(LazyThreadSafetyMode.NONE) { PexelsImageListAdapter(this) }
 
-    @OptIn(FlowPreview::class)
     override fun onAttach(context: Context) {
         (requireActivity().application as App).appComponent.imageListComponent()
             .create().inject(this)
@@ -96,7 +94,7 @@ class ImageListFragment : Fragment(), ClickListener<Hits> {
     private fun initListImagesRV() {
 
         with(binding) {
-            recycleViewImagesList.layoutManager = GridLayoutManager(requireActivity(), 3)
+            recycleViewImagesList.layoutManager = GridLayoutManager(requireActivity(), 2)
             // LinearLayoutManager(requireActivity())
             recycleViewImagesList.adapter = adapter.withLoadStateHeaderAndFooter(
                 header = ImageLoaderStateAdapter(),
@@ -119,7 +117,7 @@ class ImageListFragment : Fragment(), ClickListener<Hits> {
     }
 
 
-    override fun setClickListener(data: Hits) {
+    override fun setClickListener(data: Photo) {
         Log.d(TAG, "bundle hits = $data")
 
         findNavController()

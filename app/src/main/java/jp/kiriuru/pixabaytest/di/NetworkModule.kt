@@ -2,7 +2,7 @@ package jp.kiriuru.pixabaytest.di
 
 import dagger.Module
 import dagger.Provides
-import jp.kiriuru.pixabaytest.data.api.Api
+import jp.kiriuru.pixabaytest.data.api.PexelsApi
 import jp.kiriuru.pixabaytest.utils.Const
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -12,9 +12,9 @@ import retrofit2.create
 class NetworkModule {
 
     @Provides
-    fun provideNetworkService(): Api {
+    fun provideNetworkService(): PexelsApi {
         val retrofit = Retrofit.Builder()
-            .baseUrl(Const.BASE_URL)
+            .baseUrl(Const.PEXELS_BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
         return retrofit.create()

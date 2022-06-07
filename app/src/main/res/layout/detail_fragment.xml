@@ -55,9 +55,9 @@
             android:layout_marginStart="8dp"
             android:elevation="16dp"
             android:text="@string/user_name"
-            app:layout_constraintBottom_toBottomOf="@+id/avatar_detail"
-            app:layout_constraintStart_toEndOf="@+id/avatar_detail"
-            app:layout_constraintTop_toTopOf="@+id/avatar_detail"
+            android:layout_marginBottom="32dp"
+            app:layout_constraintStart_toEndOf="@id/avatar_detail"
+            app:layout_constraintBottom_toBottomOf="parent"
             tools:ignore="UnusedAttribute" />
 
 

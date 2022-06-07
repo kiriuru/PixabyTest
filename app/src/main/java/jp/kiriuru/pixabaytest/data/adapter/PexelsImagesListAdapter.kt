@@ -2,36 +2,41 @@ package jp.kiriuru.pixabaytest.data.adapter
 
 import android.content.Context
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.load.engine.DiskCacheStrategy
-import jp.kiriuru.pixabaytest.data.model.pixabayEntity.Hits
+import jp.kiriuru.pixabaytest.data.model.pexelsEntity.Photo
 import jp.kiriuru.pixabaytest.databinding.ListItemBinding
 import jp.kiriuru.pixabaytest.utils.ClickListener
 import jp.kiriuru.pixabaytest.utils.GlideApp
 
-class ImageListAdapter(private val clickListener: ClickListener<Hits>) :
-    PagingDataAdapter<Hits, ImageListAdapter.ViewHolder>(HitsDiffItemCallback) {
+class PexelsImageListAdapter(private val clickListener: ClickListener<Photo>) :
+    PagingDataAdapter<Photo, PexelsImageListAdapter.ViewHolder>(HitsDiffItemCallback) {
 
 
     class ViewHolder(private val binding: ListItemBinding) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(hits: Hits?, clickListener: ClickListener<Hits>) {
+        fun bind(photos: Photo?, clickListener: ClickListener<Photo>) {
             binding.img.setOnClickListener {
-                if (hits != null) {
-                    clickListener.setClickListener(hits)
+                if (photos != null) {
+                    clickListener.setClickListener(photos)
                 }
             }
             with(binding) {
-                username.text = hits?.user
+                if (photos != null) {
 
-                if (hits != null) {
+                    //Text description of the photo
+//                    username.text = photos.alt
+                    username.visibility = View.GONE
+
                     //Image
-                    imageLoad(root.context, hits.webformatURL, hits.previewURL, img)
-                    //Avatar
-                    avatarLoad(root.context, hits.userImageURL, avatar)
+                    imageLoad(root.context, photos.url, photos.src.small, img)
+
+                    avatar.visibility = View.GONE
+
                 }
 
             }
@@ -53,17 +58,6 @@ class ImageListAdapter(private val clickListener: ClickListener<Hits>) :
                 .into(imageView)
         }
 
-        private fun avatarLoad(
-            viewContext: Context,
-            url: String,
-            imageView: ImageView
-        ) {
-            GlideApp.with(viewContext).load(
-                url
-            ).diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
-                .into(imageView)
-        }
-
     }
 
 
@@ -81,20 +75,16 @@ class ImageListAdapter(private val clickListener: ClickListener<Hits>) :
         holder.bind(getItem(position), clickListener)
     }
 
-    object HitsDiffItemCallback : DiffUtil.ItemCallback<Hits>() {
+    object HitsDiffItemCallback : DiffUtil.ItemCallback<Photo>() {
 
 
-        override fun areItemsTheSame(oldItem: Hits, newItem: Hits): Boolean {
+        override fun areItemsTheSame(oldItem: Photo, newItem: Photo): Boolean {
             return oldItem == newItem
         }
 
-        override fun areContentsTheSame(oldItem: Hits, newItem: Hits): Boolean {
-            return oldItem.user == newItem.user && oldItem.webformatURL == newItem.webformatURL &&
-                    oldItem.userImageURL == newItem.userImageURL
+        override fun areContentsTheSame(oldItem: Photo, newItem: Photo): Boolean {
+            return oldItem.alt == newItem.alt && oldItem.url == newItem.url
         }
     }
 }
-
-
-
 

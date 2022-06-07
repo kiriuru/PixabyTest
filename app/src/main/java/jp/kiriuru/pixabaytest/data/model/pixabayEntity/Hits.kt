@@ -1,4 +1,4 @@
-package jp.kiriuru.pixabaytest.data.model
+package jp.kiriuru.pixabaytest.data.model.pixabayEntity
 
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
